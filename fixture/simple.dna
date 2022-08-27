@@ -1,0 +1,16 @@
+; simple Diana configuration
+
+name: 'Diana'
+profile.age.year: 18
+list:
+  * 'pet'
+  * 'micky'
+  * 'www'
+  * object: 'obj'
+    inList: true
+    nested.path.works: true
+
+multiLineText: '''
+Hello World!
+I'm long text
+'''

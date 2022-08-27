@@ -7,8 +7,10 @@ list:
   * item2
   * item3
 
-
 ; ----------------------------------- ;
+
+list2: []
+map: { a.b.c: 2, c.d: 1}
 
 ; I am comment
 let varname = 123
@@ -114,7 +116,7 @@ let applied = func(1, 2, 3) ; 1 + 4 + 9 = 14
 * numField: 123
   field: nested: inner: 123
   nested:
-   test
+    test
 * func: \a b c d ->
     test
   num: 123
