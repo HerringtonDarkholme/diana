@@ -41,8 +41,7 @@ function tokenize(src: string): Tokens {
   let i = 0
   let tokens: Tokens = []
   let lines = src.split('\n')
-  let level = 0
-  let inList = false
+  let levels = []
   while (i < lines.length) {
     let [_, indentation, content = ''] = lines[i].match(/^(\s*)(.+)/) || []
     // remove comment
@@ -52,30 +51,30 @@ function tokenize(src: string): Tokens {
       continue;
     }
     let currentLevel = indentation.length / INDENT_SIZE
-    if (currentLevel === level + 1) {
+    if (currentLevel === levels.length + 1) {
       tokens.push({type: 'indent'})
+      levels.push(false)
     } else {
-      while (currentLevel < level) {
-        if (inList) {
-          if (!content.startsWith('* ') && currentLevel >= level - 1) {
+      while (currentLevel < levels.length) {
+        if (levels[levels.length - 1]) {
+          if (!content.startsWith('* ') && currentLevel >= levels.length - 1) {
             throw new Error('Cannot mix list item with other content')
           }
-          inList = false
         } else {
           tokens.push({type: 'deindent'})
         }
-        level -= 1
+        levels.pop()
       }
     }
-    level = currentLevel
     if (content.startsWith('* ')) {
-      inList = true
       tokens.push({type: 'item'})
       content = content.slice(2)
-      level += 1
     }
     let key = /^([^: ]+)\s*:\s*/.exec(content)
     if (key) {
+      if (tokens[tokens.length - 1]?.type === 'item') {
+        levels.push(true)
+      }
       tokens.push({
         type: 'key',
         path: key[1].split('.')
@@ -141,8 +140,13 @@ function parseObject(tokens: Tokens) {
     } else if (nextToken.type === 'indent') {
       tokens.shift()
       value = parse(tokens)
-      if (tokens.at(0)?.type === 'deindent') {
+      let endToken = tokens.at(0)
+      if (!endToken) {
+        // pass
+      } else if (endToken.type === 'deindent') {
         tokens.shift()
+      } else {
+        throw new Error('no deindent')
       }
     } else {
       value = parse(tokens)
