@@ -45,7 +45,8 @@ function tokenize(src: string): Tokens {
   let inList = false
   while (i < lines.length) {
     let [_, indentation, content = ''] = lines[i].match(/^(\s*)(.+)/) || []
-    content = content.replace(/;.*/g, '')
+    // remove comment
+    content = content.replace(/\s*;.*/g, '')
     if (!content) {
       i += 1;
       continue;
@@ -56,6 +57,9 @@ function tokenize(src: string): Tokens {
     } else {
       while (currentLevel < level) {
         if (inList) {
+          if (!content.startsWith('* ') && currentLevel >= level - 1) {
+            throw new Error('Cannot mix list item with other content')
+          }
           inList = false
         } else {
           tokens.push({type: 'deindent'})
@@ -83,7 +87,7 @@ function tokenize(src: string): Tokens {
       let delimiter = content.slice(0, 3)
       let strContent = content.slice(3)
       while (!lines[++i].includes(delimiter)) {
-        strContent += lines[i]
+        strContent += lines[i] + '\n'
       }
       let idx = lines[i].indexOf(delimiter)
       strContent += lines[i].slice(0, idx)
@@ -179,4 +183,7 @@ function parseList(tokens: Tokens) {
   return list
 }
 
-console.log(JSON.stringify(convert(process.argv[2]), null, 2))
+let obj = convert(process.argv[2])
+console.log(
+  JSON.stringify(obj, null, 2)
+)
