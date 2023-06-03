@@ -1,29 +1,29 @@
-; simple
+; Diana is a config language
+; It has two modes: simple and script.
+; Simple mode is like YAML without type conversion
+; I am comment
 
 name: value
 name.value.test: 123
+
 list:
   * list
   * item2
   * item3
-list2: [
+oneline: [1, 2, 3, 4]
+spanline: [
+  1,
+  2,
+  3,
+  4,
 ]
+
 map: { a.b.c: 2, c.d: 1}
 
 ; ----------------------------------- ;
 
-; I am comment
-let varname = 123
-; term and type are the same
-; every term value can have another type value as bound
-let funcAdd(a: Int, b: Int) = a + b
-let List(A) =
-  | Nil
-  | Head: A
-    Tail: List(A)
-
-let string = 'some string'
-let interpolation = 'Hello {name}'
+let string = "some string"
+let interpolation = "Hello $name"
 let multiline = '''
 multiple line
 '''
@@ -182,8 +182,8 @@ f32 f64
 ;;;
 
 
-let IP = (u8, u8, u8, u8)
-let PrivateIP =
+type IP = (u8, u8, u8, u8)
+type PrivateIP =
   | #IP(10, ...(u8, u8, u8))
   | #IP(192, 168, ...(u8, u8))
   | #IP(172, >=16 & <= 32, ...(u8, u8))

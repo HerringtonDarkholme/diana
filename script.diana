@@ -182,8 +182,8 @@ f32 f64
 ;;;
 
 
-let IP = (u8, u8, u8, u8)
-let PrivateIP =
+type IP = (u8, u8, u8, u8)
+type PrivateIP =
   | #IP(10, ...(u8, u8, u8))
   | #IP(192, 168, ...(u8, u8))
   | #IP(172, >=16 & <= 32, ...(u8, u8))
