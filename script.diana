@@ -1,102 +1,73 @@
-; simple
+; Diana is a config language
+; It has two modes: simple and script.
+; Script mode is a functional logic language
 
-name: value
-name.value.test: 123
-list:
-  * list
-  * item2
-  * item3
+; Diana's file structure is like this:
+; Implicit Default Export:
+; zero or more let binding
+; zero or one final expression (the default export)
+; Explicit Named Export:
+; one or more let binding. `export let xx` is exported with the name `xx`
 
-; ----------------------------------- ;
+; import module
+let m = import("./simple")
 
-list2: []
-map: { a.b.c: 2, c.d: 1}
-
-; I am comment
+; Binding
 let varname = 123
-; term and type are the same
-; every term value can have another type value as bound
-let funcAdd(a: Int, b: Int) = a + b
-let List(A) =
-  | Nil
-  | Head: A
-    Tail: List(A)
+let funcAdd(a: Int, b: Int) = a + b ; function??
+let annotated: int = 123 # type annotation is supported
 
-let string = 'some string'
-let interpolation = 'Hello {name}'
-let multiline = '''
-multiple line
-'''
+let interpolation = "Hello {name}"
+let escaped = "escape using \\, \", \{\}"
 
-; List
-let list =
-  * item1
-  * item2
-  * item3
-let oneline = [1, 2, 3, 4]
-let spreaded =
-   ...spread ; spread requires clear context
+; list
 
+let spread = [
+  ...list,
+  1, 2, 3, ; trailing comma is required
+]
 let multiLineSpread =
   * 1
   * 2
   ...spread ; clear context
 
+; wrong. spread requires clear context
+; let spreaded =
+;   ...spread ;
+
+; list comprehension
+; it cannot be mixed with other list elements
 let comprehension = [
   num * 810
   for item in list
   if item
 ]
 
+; object enhancement
 let object =
-  key: value
   optional?: value
-  defaultVal: bound = value
+  defaultVal: bound = value ; default value will be overridden when merging
   key:
     nested: value
-    moreValue: 42
  nested.path.in.object: 42
  [dynamicKey]: dynamicValue
  ...spread
 
-; value has two kinds:
-; singleton and bound
-let User =
-  firstName: string ; bound
-  lastName: string ; bound
-  fullName: "{firstName} {lastName}" ; computed singleton
-  age: int  ;bound
-  isUnderAge: age < 21 ; computed singleton
-  isVip: boolean ; bound
-
-; refinement, no additional field can be added
-let VipUser = #User
-  isVip: true
-
-; refined to a singleton
-; every field must
-let mary = #User
-  firstName: 'Mary'
-  lastName: 'Smith'
-  age: 23
-
-; multiple refinement
-let billy = #User#isVip
-  firstName: 'Mary'
-  lastName: 'Smith'
-  age: 23
-  isVip: true
-
-; spreading allow override bound and add new fields
-let newUser =
-  ...billy
-  firstName: 334
-
-let onelineObj = {a: 1, b: 2, c: 3}
 let objComprehension = {
    [key]: value
    for key, value in
    keyedContainer
+   if key == "42"
+}
+let shortHand = { x, y, z, a.b.c }
+
+let field = object.key
+let optionalChain = object.optional?.something
+
+; spreading allow override bound and add new fields
+let newUser = {
+  ...billy,
+  firstName: 334,
 }
 
 ; function literal
@@ -114,7 +85,7 @@ let applied = func(1, 2, 3) ; 1 + 4 + 9 = 14
 
 ; combine together!
 * numField: 123
-  field: nested: inner: 123
+  field.nested.inner: 123
   nested:
     test
 * func: \a b c d ->
@@ -128,30 +99,33 @@ let applied = func(1, 2, 3) ; 1 + 4 + 9 = 14
     * 2
     * 3
 
-; set?
-let numSet = set(1,2,3,4)
+; set
+let numSet = set([1,2,3,4])
 let setLiteral = %[1,2,3,4] ; what about sorted set?
-;; tuple?
+; tuple?
 let tuple = (1, 2, 3)
-let tuple =
+let tupleLiteral =
   ~ a
   ~ b
-  ...tuple
-  ...list ; list can be embedded in the middle of tuple
-          ; rest element cannot be followed by rest
-  ...tuple
   ~ c
   ~ d
 
 
 ; conditional
+; no early return in if/else
+; too imperative
 let ifElse =
   if a then b else c
+let mutlilineConditional =
+  if test
+    a
+  else
+    b
 
 ; pattern matching
 let matchExpr = match test
   String -> 'String'
-  b @ Int -> 123 + s  ; pattern binding
+  b @ Int -> 123 + b  ; pattern binding
   Struct {age} -> age
   Bool ->
     nested: value
@@ -190,3 +164,81 @@ type PrivateIP =
 
 myIP: #PrivateIP( 10, 2, 3, 4 )
 yourIP: #PrivateIP(11, 1, 2, 3)
+
+; term and type are similar
+type Name = string
+
+; union type
+type Direction =
+  | "North"
+  | "East"
+  | "West"
+  | "South"
+; intersection type
+type Travel = { direction: Direction } & { mileage: int }
+
+; every term value can have another type value as bound
+type User =
+  firstName: string ; bound
+  lastName: string ; bound
+  fullName: "{firstName} {lastName}" ; computed bound
+  age: int  ;bound
+  isUnderAge: age < 21 ; computed bound
+  isVip: boolean ; bound
+
+; refinement, no new field can be added
+type VipUser = #User
+  isVip: true
+; & intersection can add new fields
+; & will report error if fields conflict
+type AddField = User & Basic & {
+  moreField: string
+}
+
+; term can be computed, type cannot be computed
+type bar = > 60 ; ok
+; let higherBar = bar + 30 ; wrong! bound cannot be computed
+
+; refined to a value
+; every field must be instantiated
+let mary = #VipUser
+  firstName: 'Mary'
+  lastName: 'Smith'
+  age: 23
+
+; multiple refinement, latter fields will override former fields
+let billy = #User#isVip
+  firstName: 'Mary'
+  lastName: 'Smith'
+  age: 23
+
+let youCanRefineValue = #billy#mary
+
+; single argument function returning bool can be type
+; this is called refinement type
+let isEven(n: int): bool = n % 2 == 0
+let two: isEven = 2 ; ok
+; let three: isEven = 3 ; wrong
+
+;;;
+However, function refinement type is eliminated when used
+let isSmallEven(a: isEven) =
+  if a < 10
+    true
+  else
+    isSmallEven(a - 2) # this will not report error when compile!
+
+We can check this by using SMT solver like F*.
+But I don't think we have the effort or audience will understand this shenanigans
+Reference:
+https://www.fstar-lang.org/tutorial/proof-oriented-programming-in-fstar.pdf
+
+Verse just eliminate refinement to their upper bound
+https://brianmckenna.org/blog/verse_types
+
+Idris don't use refinement type but instead dependent type
+If we were Idris, the program will be written like this:
+We need a proposition to encode the N is even.
+let isEven[N: Nat](n: N): Proposition = Parity[N] == Even
+Too Bad for DX.
+;;;

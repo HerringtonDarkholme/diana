@@ -1,11 +1,44 @@
+; I am comment!
+
 ; Diana is a config language
 ; It has two modes: simple and script.
 ; Simple mode is like YAML without type conversion
-; I am comment
 
-name: value
-name.value.test: 123
+; Basic Data type
+integer: 123
+float: 12.3
+scientific: 6.0221409e+23
+bool: true
+nothingness: null
 
+; String
+string: "value"
+multiple: """
+multiple line is
+supported
+"""
+
+; Diction
+object:
+  key: "value"
+  nested:
+    nest1: 42
+    nest2:
+      moreNested: "nest"
+  name.value.test: 123
+  [123]: "number key"
+  "name.value.test": "you have dot in key"
+topLevel.nested.value: "of course"
+onelineObj: { a.b.c: 2, c.d: 1 }
+indentationIgnoratObj: {
+  a: 1, ; must have comma
+  key:
+    you: "can"
+    mix: "two", ; shall we?
+  [true]: "boolean key",
+}
+
+; List
 list:
   * list
   * item2
@@ -13,180 +46,9 @@ list:
 oneline: [1, 2, 3, 4]
 spanline: [
   1,
-  2,
+  * "a"
+  * "b"
+  * "c",
   3,
   4,
 ]
-
-map: { a.b.c: 2, c.d: 1}
-
-; ----------------------------------- ;
-
-let string = "some string"
-let interpolation = "Hello $name"
-let multiline = '''
-multiple line
-'''
-
-; List
-let list =
-  * item1
-  * item2
-  * item3
-let oneline = [1, 2, 3, 4]
-let spreaded =
-   ...spread ; spread requires clear context
-
-let multiLineSpread =
-  * 1
-  * 2
-  ...spread ; clear context
-
-let comprehension = [
-  num * 810
-  for item in list
-  if item
-]
-
-let object =
-  key: value
-  optional?: value
-  defaultVal: bound = value
-  key:
-    nested: value
-    moreValue: 42
- nested.path.in.object: 42
- [dynamicKey]: dynamicValue
- ...spread
-
-; value has two kinds:
-; singleton and bound
-let User =
-  firstName: string ; bound
-  lastName: string ; bound
-  fullName: "{firstName} {lastName}" ; computed singleton
-  age: int  ;bound
-  isUnderAge: age < 21 ; computed singleton
-  isVip: boolean ; bound
-
-; refinement, no additional field can be added
-let VipUser = #User
-  isVip: true
-
-; refined to a singleton
-; every field must
-let mary = #User
-  firstName: 'Mary'
-  lastName: 'Smith'
-  age: 23
-
-; multiple refinement
-let billy = #User#isVip
-  firstName: 'Mary'
-  lastName: 'Smith'
-  age: 23
-  isVip: true
-
-; spreading allow override bound and add new fields
-let newUser =
-  ...billy
-  firstName: 334
-
-let onelineObj = {a: 1, b: 2, c: 3}
-let objComprehension = {
-   [key]: value
-   for key, value in
-   keyedContainer
-}
-
-; function literal
-let func = \a b c ->
-  let aSquare = a * a
-  let bSquare = b * b
-  let cSquare = c * c
-  aSquare + bSquare + cSquare
-let funcAnnotation = \(a: Int, b: Int) ->
-  a + b
-let funcDestructuring = \({a, b}: Struct, [e, tail]: List(Int)) ->
-  ree
-let shorthandParam = \$0.name
-let applied = func(1, 2, 3) ; 1 + 4 + 9 = 14
-
-; combine together!
-* numField: 123
-  field: nested: inner: 123
-  nested:
-    test
-* func: \a b c d ->
-    test
-  num: 123
-* test
-  func: \ a b c d ->
-    wewe
-  nested.nested.nested:
-    * 1
-    * 2
-    * 3
-
-; set?
-let numSet = set(1,2,3,4)
-let setLiteral = %[1,2,3,4] ; what about sorted set?
-;; tuple?
-let tuple = (1, 2, 3)
-let tuple =
-  ~ a
-  ~ b
-  ...tuple
-  ...list ; list can be embedded in the middle of tuple
-          ; rest element cannot be followed by rest
-  ...tuple
-  ~ c
-  ~ d
-
-
-; conditional
-let ifElse =
-  if a then b else c
-
-; pattern matching
-let matchExpr = match test
-  String -> 'String'
-  b @ Int -> 123 + s  ; pattern binding
-  Struct {age} -> age
-  Bool ->
-    nested: value
-    also: works
-  (first, second) -> 'tuple works'
-  else 123
-
-; named export
-export let secret = 114514
-export let meaning = 42
-; default export
-export expr
-export
-  field: value
-  field: value
-
-; keyword
-;;;
-from import export let match if then else
-for in
-;;;
-
-; builtin type
-;;;
-i8 i16 i32 i64 i128
-u8 u16 u32 u64 u128
-f32 f64
-;;;
-
-
-type IP = (u8, u8, u8, u8)
-type PrivateIP =
-  | #IP(10, ...(u8, u8, u8))
-  | #IP(192, 168, ...(u8, u8))
-  | #IP(172, >=16 & <= 32, ...(u8, u8))
-
-myIP: #PrivateIP( 10, 2, 3, 4 )
-yourIP: #PrivateIP(11, 1, 2, 3)
