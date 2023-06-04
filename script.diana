@@ -215,7 +215,7 @@ let billy = #User#isVip
 let youCanRefineValue = #billy#mary
 
 ; single argument function returning bool can be type
-; this is called refinement type
+; this is called refinement type, or custom type
 let isEven(n: int): bool = n % 2 == 0
 let two: isEven = 2 ; ok
 ; let three: isEven = 3 ; wrong
@@ -241,4 +241,26 @@ If we were Idris, the program will be written like this:
 We need a proposition to encode the N is even.
 let isEven[N: Nat](n: N): Proposition = Parity[N] == Even
 Too Bad for DX.
+;;;
+
+;;;
+Conceptually, a custom type will be converted to a runtime assertion
+so the example above can be written as
+
+let two: Int = (\ a ->
+  assert(a % 2 == 0)
+  a)(2)
+
+We can apply compile time optimization to remove assertion.
+
+More specifically:
+check if `a` matches `type`
+1. if a is compile time constant, run type checking and report error if mismatch
+2. otherwise, if a's bound is compile time known, run the following algorithm
+  a. if bound <: type, skip runtime assertion
+  b. if type <: bound, add runtime assertion
+  c. if type & bound is bottom, report compile error
+3. add runtime assertion
+
+That means, users should prefer builtin type bound instead of custom type
 ;;;
