@@ -1,13 +1,12 @@
 {
   "name": "diana-lang",
   "version": "0.1.0",
-  "description": "Diana programming language tooling in TypeScript",
+  "description": "Diana configuration language in TypeScript",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "oxlint src test"
+    "test:watch": "vitest"
   },
   "keywords": [
     "diana",

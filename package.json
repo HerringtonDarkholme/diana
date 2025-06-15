@@ -2,7 +2,7 @@
   "name": "diana-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo for Diana programming language tooling",
+  "description": "Monorepo for Diana configuration language tooling",
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",

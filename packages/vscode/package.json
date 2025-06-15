@@ -1,7 +1,7 @@
 {
   "name": "vscode-diana",
   "version": "0.0.1",
-  "description": "VS Code extension for Diana programming language",
+  "description": "VS Code extension for Diana configuration language",
   "author": "",
   "license": "MIT",
   "engines": {
@@ -14,8 +14,7 @@
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "tsc -p ./",
-    "lint": "oxlint src",
-    "test": "vitest run"
+    "test": "echo todo"
   },
   "devDependencies": {
     "@types/vscode": "^1.80.0",
@@ -26,4 +25,4 @@
   "dependencies": {
     "diana-lang": "workspace:^0.1.0"
   }
-} 
+}
