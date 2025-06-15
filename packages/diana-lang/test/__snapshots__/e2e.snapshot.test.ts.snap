@@ -1,0 +1,191 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Diana E2E Snapshot Tests > should compile arrays and lists 1`] = `
+{
+  "features": [
+    "authentication",
+    "logging",
+    "monitoring",
+  ],
+  "mixed": [
+    1,
+    "two",
+    true,
+    null,
+  ],
+  "ports": [
+    80,
+    443,
+    8080,
+  ],
+  "servers": [
+    "web1",
+    "web2",
+    "web3",
+  ],
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile complex nested structures 1`] = `
+{
+  "application": {
+    "database": {
+      "connection": {
+        "database": "ecommerce",
+        "host": "db.internal",
+        "pool": {
+          "max": 10,
+          "min": 2,
+          "timeout": 30000,
+        },
+        "port": 5432,
+      },
+      "type": "postgresql",
+    },
+    "features": {
+      "analytics": true,
+      "payments": true,
+      "recommendations": false,
+    },
+    "name": "E-Commerce Platform",
+    "server": {
+      "host": "0.0.0.0",
+      "port": 8080,
+      "ssl": {
+        "cert": "/path/to/cert.pem",
+        "enabled": true,
+        "key": "/path/to/key.pem",
+      },
+    },
+    "version": "2.1.0",
+  },
+  "email_service": {
+    "timeout": 3000,
+  },
+  "environment": {
+    "debug": false,
+  },
+  "logging": {
+    "outputs": [
+      "console",
+      "file",
+    ],
+  },
+  "payment_service": {
+    "timeout": 5000,
+  },
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile dot notation keys 1`] = `
+{
+  "app": {
+    "config": {
+      "timeout": 30000,
+    },
+  },
+  "server": {
+    "database": {
+      "port": 5432,
+    },
+  },
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile mixed data types and null values 1`] = `
+{
+  "boolean_false": false,
+  "boolean_true": true,
+  "empty_string": "",
+  "float_value": 45.67,
+  "integer_value": 123,
+  "null_value": null,
+  "string_value": "hello world",
+  "zero_number": 0,
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile multi-line strings 1`] = `
+{
+  "description": "
+This is a multi-line string
+that spans several lines
+and preserves formatting.
+",
+  "sql": "
+SELECT * FROM users
+WHERE active = true
+  AND created_at > '2023-01-01'
+ORDER BY created_at DESC;
+",
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile nested objects 1`] = `
+{
+  "database": {
+    "credentials": {
+      "password": "secret",
+      "ssl": true,
+      "username": "admin",
+    },
+    "host": "localhost",
+    "port": 5432,
+  },
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile quoted keys with special characters 1`] = `
+{
+  "app.name": "Special Key",
+  "computed.key": "bracket notation",
+  "server-config": "dash-key",
+  "spaced key": "with spaces",
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile simple key-value pairs 1`] = `
+{
+  "active": true,
+  "count": 42,
+  "name": "Diana",
+  "version": "0.1.0",
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile user configuration using dot notation 1`] = `
+{
+  "user1": {
+    "roles": [
+      "admin",
+      "user",
+    ],
+  },
+  "user2": {
+    "metadata": {
+      "preferences": {
+        "notifications": true,
+      },
+    },
+  },
+  "user_ids": [
+    1,
+    2,
+  ],
+}
+`;
+
+exports[`Diana E2E Snapshot Tests > should compile with comments throughout 1`] = `
+{
+  "api": {
+    "base_url": "https://api.example.com",
+    "timeouts": {
+      "connect": 5000,
+      "read": 30000,
+    },
+    "version": "v1",
+  },
+  "debug": true,
+  "name": "Test App",
+}
+`;

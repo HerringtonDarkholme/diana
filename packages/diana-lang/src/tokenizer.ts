@@ -40,8 +40,9 @@ function isIdentifierStart(ch: string) {
 }
 
 function isIdentifierChar(ch: string) {
-  // Allow letters, digits, underscores, dots, brackets, and quotes in identifiers
-  return /[A-Za-z0-9_.[\]"-]/i.test(ch)
+  // Allow letters, digits, underscores, dots, and quotes in identifiers
+  // Note: brackets are handled separately for computed keys
+  return /[A-Za-z0-9_."'-]/i.test(ch)
 }
 
 export function tokenize(input: string): Token[] {

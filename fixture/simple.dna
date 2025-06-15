@@ -1,16 +1,4 @@
-; simple Diana configuration
-; comments starts with semicolon (ELisp like!)
-
-name: "Diana"
-profile.age.year: 18
 pets:
-  * 'pet'
-  * 'micky'
-  * 'www'
   * object: 'obj'
     inList: true
     nested.path.works: true
-multiLineText: """"
-Hello World!
-I'm long text spanning multiple lines.
-"""
