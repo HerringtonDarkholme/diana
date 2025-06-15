@@ -136,38 +136,57 @@ export function tokenize(input: string): Token[] {
     if (ch === ',') { addToken('COMMA'); advance(); continue; }
     if (ch === '{') { addToken('LBRACE'); advance(); continue; }
     if (ch === '}') { addToken('RBRACE'); advance(); continue; }
-    if (ch === '[') { addToken('LBRACKET'); advance(); continue; }
-    if (ch === ']') { addToken('RBRACKET'); advance(); continue; }
-    if (ch === '*') { addToken('ASTERISK'); advance(); continue; }
-    // Handle multi-line string
-    if (ch === '"' && peek(1) === '"' && peek(2) === '"') {
-      let startCol = col;
-      advance(3); // skip """
-      let str = '';
-      while (!(peek() === '"' && peek(1) === '"' && peek(2) === '"') && pos < input.length) {
-        str += peek();
-        advance();
-      }
-      advance(3); // skip closing """
-      addToken('STRING', str);
-      continue;
-    }
-    // Handle string
-    if (ch === '"') {
-      let str = '';
-      advance(); // skip opening "
-      while (peek() !== '"' && pos < input.length) {
-        if (peek() === '\\' && peek(1) === '"') {
-          str += '"';
-          advance(2);
-        } else {
-          str += peek();
-          advance();
+    if (ch === '[') {
+      // Look ahead to see if this is a bracketed key (e.g., [123]:)
+      let start = pos;
+      advance(); // skip [
+      let innerStart = pos;
+      readWhile(c => c !== ']');
+      let inner = input.slice(innerStart, pos);
+      advance(); // skip ]
+      let after = pos;
+      skipWhitespace();
+      if (peek() === ':') {
+        // Bracketed key
+        let id = input.slice(start, pos); // includes [ and ]
+        addToken('IDENTIFIER', id);
+        continue;
+      } else {
+        // Not a key, treat as LBRACKET, ...
+        pos = start; // rewind
+        col -= (pos - start);
+        addToken('LBRACKET'); advance();
+        skipWhitespace();
+        while (pos < input.length && peek() !== ']') {
+          if (isDigit(peek())) {
+            let num = readWhile(isDigit);
+            addToken('NUMBER', num);
+            skipWhitespace();
+            if (peek() === ',') { addToken('COMMA'); advance(); skipWhitespace(); }
+          } else {
+            advance();
+          }
         }
+        if (peek() === ']') { addToken('RBRACKET'); advance(); }
+        continue;
       }
+    }
+    if (ch === '"') {
+      // Quoted key or string
+      let start = pos;
+      advance(); // skip opening "
+      readWhile(c => c !== '"');
       advance(); // skip closing "
-      addToken('STRING', str);
-      continue;
+      let id = input.slice(start, pos); // includes " and "
+      skipWhitespace();
+      if (peek() === ':') {
+        addToken('IDENTIFIER', id);
+        continue;
+      } else {
+        // Not a key, treat as STRING
+        addToken('STRING', id.slice(1, -1));
+        continue;
+      }
     }
     // Handle number (int, float, scientific)
     if (isDigit(ch) || (ch === '-' && isDigit(peek(1)))) {
@@ -194,20 +213,9 @@ export function tokenize(input: string): Token[] {
       addToken('NUMBER', num);
       continue;
     }
-    // Handle identifier, boolean, null, bracketed/quoted keys
+    // Handle identifier, boolean, null
     if (isIdentifierStart(ch)) {
-      let id = '';
-      if (ch === '[') {
-        advance();
-        id = '[' + readWhile(c => c !== ']') + ']';
-        advance(); // skip closing ]
-      } else if (ch === '"') {
-        advance();
-        id = '"' + readWhile(c => c !== '"') + '"';
-        advance(); // skip closing "
-      } else {
-        id = readWhile(isIdentifierChar);
-      }
+      let id = readWhile(isIdentifierChar);
       if (id in KEYWORDS) {
         addToken(KEYWORDS[id as keyof typeof KEYWORDS] as TokenType, id);
       } else {
@@ -224,5 +232,7 @@ export function tokenize(input: string): Token[] {
     addToken('DEDENT');
   }
   addToken('EOF');
+  // DEBUG: Print all tokens for troubleshooting
+  console.log(JSON.stringify(tokens, null, 2));
   return tokens;
 } 
