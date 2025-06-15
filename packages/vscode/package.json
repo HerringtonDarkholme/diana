@@ -11,6 +11,39 @@
     "Programming Languages"
   ],
   "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:diana"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "diana",
+        "aliases": [
+          "Diana",
+          "diana"
+        ],
+        "extensions": [
+          ".dna",
+          ".diana"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "diana",
+        "scopeName": "source.diana",
+        "path": "./syntaxes/diana.tmGrammar.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "diana.restart",
+        "title": "Restart Diana Language Server",
+        "category": "Diana"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "tsc -p ./",
@@ -23,6 +56,7 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
-    "diana-lang": "workspace:^0.1.0"
+    "diana-lang": "workspace:^0.1.0",
+    "vscode-languageclient": "^9.0.1"
   }
 }
