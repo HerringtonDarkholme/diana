@@ -1,0 +1,35 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Diana Core Language Rules
+
+## Tokenizer
+- The tokenizer must emit INDENT/DEDENT tokens for block structure, and track line/column for all tokens for precise error reporting and tooling support.
+- Support Unicode and handle edge cases in whitespace, comments, and string literals.
+- Tokenizer should be robust against malformed input and provide meaningful error messages.
+- Comments in source files should be preserved in the AST as metadata when possible, to support documentation and tooling.
+
+## Parser
+- The parser must support both inline and indentation-based (YAML-like) structures, reflecting the language's flexible syntax.
+- AST node types and token types must be explicitly enumerated in TypeScript for type safety and clarity.
+- Follow the structure and conventions established in `src/tokenizer.ts` and `src/parser.ts` for new language features.
+- Parser should be resilient to incomplete or erroneous input, enabling better IDE and tooling experiences.
+
+## AST & Language Design
+- The AST should be designed for extensibility, allowing for future language features and tooling needs.
+- Maintain a clear separation between syntax (parsing) and semantics (type checking, evaluation).
+- Document all AST node types and their intended use in code comments and, where appropriate, in the language spec (`doc/grammar.md`).
+
+## Testing & Quality
+- All tokenizer and parser features must be covered by comprehensive tests, including edge cases and error conditions.
+- Use property-based testing where possible to ensure robustness.
+- Ensure that changes to the core language are reflected in the language spec (`doc/grammar.md`).
+
+## Insights & Best Practices
+- Prioritize clear error messages and diagnostics for a better developer experience.
+- Strive for performance in the tokenizer and parser, but never at the expense of correctness or maintainability.
+- Keep the implementation modular: tokenizer, parser, and AST logic should be in separate modules/files.
+- Regularly review and update the language spec to match implementation changes.
+- Encourage contributions to include updates to both code and documentation.

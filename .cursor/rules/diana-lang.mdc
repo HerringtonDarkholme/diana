@@ -3,21 +3,16 @@ description:
 globs: 
 alwaysApply: false
 ---
-# Diana Language Project Rules
+# Diana Monorepo Project Rules
 
-## Tokenizer & Parser
-- Tokenizer must emit INDENT/DEDENT tokens for block structure, and track line/column for all tokens.
-- Parser must support both inline and indentation-based (YAML-like) structures.
-- Comments in source files should be preserved in the AST as metadata when possible.
-- AST node types and token types must be explicitly enumerated in TypeScript.
-- Follow the structure and conventions established in `src/tokenizer.ts` and `src/parser.ts` for new language features.
-
-## Project Layout
-- All package-specific source code must be placed in a `src/` directory within its respective package (e.g., `packages/diana-lang/src`).
-- All package-specific tests must be placed in a `test/` directory within its respective package, mirroring the structure of `src/` where possible (e.g., `packages/diana-lang/test`).
-- Project configuration files (e.g., `package.json`, `tsconfig.json`) for individual packages must be in the package root.
-- Workspace-level configuration files (e.g., `pnpm-workspace.yaml`, root `tsconfig.json`) must be in the project root.
-- Cursor rules must be placed in `.cursor/rules/`.
+## Monorepo Structure
+- This project is a monorepo managed with pnpm workspaces.
+- There are two main packages:
+  - **Core Language Package**: `packages/diana-lang` (contains the core Diana language implementation)
+  - **VSCode Extension Package**: `packages/vscode` (contains the VSCode extension for Diana)
+- Each package contains its own `src/` and `test/` directories for source code and tests, respectively.
+- The language specification and grammar are documented in the `doc/` directory (see `doc/grammar.md`).
+- Core language-specific rules (e.g., tokenizer, parser) are defined in `.cursor/rules/diana-lang-core.mdc`.
 
 ## Naming Conventions
 - Use `camelCase` for variables and function names.
