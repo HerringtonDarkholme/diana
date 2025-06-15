@@ -41,11 +41,13 @@ function isDigit(ch: string) {
 }
 
 function isIdentifierStart(ch: string) {
-  return /[A-Za-z_[].-\d"]/i.test(ch)
+  // Only allow identifiers to start with a letter, underscore, or quote (for quoted keys)
+  return /[A-Za-z_\"]/i.test(ch)
 }
 
 function isIdentifierChar(ch: string) {
-  return /[A-Za-z0-9_.[\]"]/i.test(ch)
+  // Allow letters, digits, underscores, dots, brackets, and quotes in identifiers
+  return /[A-Za-z0-9_\.\[\]\"-]/i.test(ch)
 }
 
 export function tokenize(input: string): Token[] {
@@ -135,48 +137,40 @@ export function tokenize(input: string): Token[] {
     if (ch === '{') { addToken('LBRACE'); advance(); continue; }
     if (ch === '}') { addToken('RBRACE'); advance(); continue; }
     if (ch === '[') {
+      // Check for special key: [123]:
+      let start = pos
       advance(); // skip [
-      let innerStart = pos
-      readWhile(c => c !== ']')
-      advance(); // skip ]
-      skipWhitespace()
+      while (peek() && peek() !== ']') advance();
+      if (peek() === ']') advance(); // skip ]
+      let end = pos;
+      skipWhitespace();
       if (peek() === ':') {
-        let id = input.slice(innerStart - 1, pos); // includes [ and ]
-        addToken('IDENTIFIER', id)
-        continue
+        // This is a special key
+        let key = input.slice(start, end); // includes [ and ]
+        addToken('IDENTIFIER', key)
+        continue;
       } else {
-        pos = innerStart - 1; // rewind
-        col -= (pos - (innerStart - 1))
-        addToken('LBRACKET'); advance()
-        skipWhitespace()
-        while (pos < input.length && peek() !== ']') {
-          if (isDigit(peek())) {
-            let num = readWhile(isDigit)
-            addToken('NUMBER', num)
-            skipWhitespace()
-            if (peek() === ',') { addToken('COMMA'); advance(); skipWhitespace(); }
-          } else {
-            advance()
-          }
-        }
-        if (peek() === ']') { addToken('RBRACKET'); advance(); }
-        continue
+        // Not a special key, treat as LBRACKET
+        pos = start;
+        col -= (pos - start);
+        addToken('LBRACKET'); advance();
+        continue;
       }
     }
+    if (ch === ']') { addToken('RBRACKET'); advance(); continue; }
+    // Handle quoted keys or strings
     if (ch === '"') {
-      // Quoted key or string
       let start = pos
       advance(); // skip opening "
       readWhile(c => c !== '"')
       advance(); // skip closing "
-      let id = input.slice(start, pos); // includes " and "
+      let str = input.slice(start, pos) // includes quotes
       skipWhitespace()
       if (peek() === ':') {
-        addToken('IDENTIFIER', id)
+        addToken('IDENTIFIER', str)
         continue
       } else {
-        // Not a key, treat as STRING
-        addToken('STRING', id.slice(1, -1))
+        addToken('STRING', str.slice(1, -1))
         continue
       }
     }
@@ -208,8 +202,10 @@ export function tokenize(input: string): Token[] {
     // Handle identifier, boolean, null
     if (isIdentifierStart(ch)) {
       let id = readWhile(isIdentifierChar)
-      if (id in KEYWORDS) {
-        addToken(KEYWORDS[id as keyof typeof KEYWORDS] as TokenType, id)
+      if (id === 'true' || id === 'false') {
+        addToken('BOOLEAN', id)
+      } else if (id === 'null') {
+        addToken('NULL', id)
       } else {
         addToken('IDENTIFIER', id)
       }
