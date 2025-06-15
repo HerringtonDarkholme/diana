@@ -1,14 +1,18 @@
 {
-  "name": "diana",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "diana-lang",
+  "version": "0.1.0",
+  "description": "Diana programming language tooling in TypeScript",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
+  "keywords": ["diana", "language", "parser", "lsp", "highlighting"],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/node": "^18.7.13"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }
