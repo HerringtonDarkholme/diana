@@ -26,12 +26,6 @@ export interface Token {
   column: number
 }
 
-const _KEYWORDS = {
-  'true': 'BOOLEAN',
-  'false': 'BOOLEAN',
-  'null': 'NULL',
-}
-
 function isWhitespace(ch: string) {
   return ch === ' ' || ch === '\t'
 }
@@ -140,21 +134,21 @@ export function tokenize(input: string): Token[] {
       // Check for special key: [123]:
       let start = pos
       advance(); // skip [
-      while (peek() && peek() !== ']') advance();
+      while (peek() && peek() !== ']') advance()
       if (peek() === ']') advance(); // skip ]
-      let end = pos;
-      skipWhitespace();
+      let end = pos
+      skipWhitespace()
       if (peek() === ':') {
         // This is a special key
         let key = input.slice(start, end); // includes [ and ]
         addToken('IDENTIFIER', key)
-        continue;
+        continue
       } else {
         // Not a special key, treat as LBRACKET
-        pos = start;
-        col -= (pos - start);
-        addToken('LBRACKET'); advance();
-        continue;
+        pos = start
+        col -= (pos - start)
+        addToken('LBRACKET'); advance()
+        continue
       }
     }
     if (ch === ']') { addToken('RBRACKET'); advance(); continue; }
@@ -164,29 +158,29 @@ export function tokenize(input: string): Token[] {
       if (peek(1) === '"' && peek(2) === '"') {
         // Triple-quoted string
         advance(3); // skip opening """
-        let str = '';
+        let str = ''
         while (pos < input.length && !(peek() === '"' && peek(1) === '"' && peek(2) === '"')) {
-          str += peek();
-          advance();
+          str += peek()
+          advance()
         }
         if (peek() === '"' && peek(1) === '"' && peek(2) === '"') {
           advance(3); // skip closing """
         }
-        skipWhitespace();
+        skipWhitespace()
         if (peek() === ':') {
-          addToken('IDENTIFIER', '"""' + str + '"""');
-          continue;
+          addToken('IDENTIFIER', '"""' + str + '"""')
+          continue
         } else {
-          addToken('STRING', str);
-          continue;
+          addToken('STRING', str)
+          continue
         }
       } else {
-        let start = pos;
+        let start = pos
         advance(); // skip opening "
         readWhile(c => c !== '"')
         advance(); // skip closing "
         let str = input.slice(start, pos); // includes quotes
-        skipWhitespace();
+        skipWhitespace()
         if (peek() === ':') {
           addToken('IDENTIFIER', str)
           continue
