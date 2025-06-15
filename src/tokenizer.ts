@@ -26,7 +26,7 @@ export interface Token {
   column: number
 }
 
-const KEYWORDS = {
+const _KEYWORDS = {
   'true': 'BOOLEAN',
   'false': 'BOOLEAN',
   'null': 'NULL',
@@ -42,12 +42,12 @@ function isDigit(ch: string) {
 
 function isIdentifierStart(ch: string) {
   // Only allow identifiers to start with a letter, underscore, or quote (for quoted keys)
-  return /[A-Za-z_\"]/i.test(ch)
+  return /[A-Za-z_"]/i.test(ch)
 }
 
 function isIdentifierChar(ch: string) {
   // Allow letters, digits, underscores, dots, brackets, and quotes in identifiers
-  return /[A-Za-z0-9_\.\[\]\"-]/i.test(ch)
+  return /[A-Za-z0-9_.[\]"-]/i.test(ch)
 }
 
 export function tokenize(input: string): Token[] {

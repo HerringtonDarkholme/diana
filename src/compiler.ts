@@ -1,6 +1,6 @@
 // Compiler for Diana language
 
-import type { ASTNode, ProgramNode, KeyValueNode, ObjectNode, ListNode, StringNode, NumberNode, BooleanNode, NullNode, IdentifierNode } from './parser'
+import type { ASTNode, ProgramNode, KeyValueNode, ObjectNode, ListNode, StringNode, NumberNode, BooleanNode, IdentifierNode } from './parser'
 
 export function compile(ast: ASTNode): any {
   switch (ast.type) {
