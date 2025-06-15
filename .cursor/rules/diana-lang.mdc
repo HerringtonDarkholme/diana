@@ -3,3 +3,38 @@ description:
 globs: 
 alwaysApply: false
 ---
+# Diana Language Project Rules
+
+## Tokenizer & Parser
+- Tokenizer must emit INDENT/DEDENT tokens for block structure, and track line/column for all tokens.
+- Parser must support both inline and indentation-based (YAML-like) structures.
+- Comments in source files should be preserved in the AST as metadata when possible.
+- AST node types and token types must be explicitly enumerated in TypeScript.
+- Follow the structure and conventions established in `src/tokenizer.ts` and `src/parser.ts` for new language features.
+
+## Project Layout
+- All source code must be placed in the `src/` directory.
+- All tests must be placed in the `test/` directory, mirroring the structure of `src/` where possible.
+- Project configuration files (e.g., `package.json`, `tsconfig.json`) must be in the project root.
+- Cursor rules must be placed in `.cursor/rules/`.
+
+## Naming Conventions
+- Use `camelCase` for variables and function names.
+- Use `PascalCase` for type and interface names.
+- Use `UPPER_CASE` for constants.
+- File names should be `kebab-case` (e.g., `tokenizer.ts`, `parser.ts`).
+- Test files should be named as `<module>.test.ts` (e.g., `tokenizer.test.ts`).
+
+## Testing
+- Use Vitest for all tests.
+- Each module in `src/` must have a corresponding test file in `test/`.
+- Tests should cover edge cases, error handling, and typical usage.
+- Run tests with `pnpm test` before submitting changes.
+
+## General Best Practices
+- Use pnpm for dependency management.
+- Use TypeScript for all code and tests.
+- All new features or changes should be accompanied by tests in the `test/` directory.
+- Write clear, concise, and well-documented code.
+- Prefer semicolon-less style throughout the project (see .oxlintrc.json).
+- Place additional project rules in this directory as needed for future contributors.
