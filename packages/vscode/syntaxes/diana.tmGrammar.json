@@ -38,12 +38,7 @@
           "name": "comment.block.diana",
           "begin": ";;;",
           "end": ";;;",
-          "patterns": [
-            {
-              "name": "comment.block.content.diana",
-              "match": ".*"
-            }
-          ]
+          "contentName": "comment.block.content.diana"
         },
         {
           "name": "comment.line.semicolon.diana",

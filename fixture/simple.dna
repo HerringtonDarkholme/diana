@@ -1,7 +1,7 @@
 ; simple Diana configuration
 ; comments starts with semicolon (ELisp like!)
 
-name: 'Diana'
+name: "Diana"
 profile.age.year: 18
 pets:
   * 'pet'
@@ -10,7 +10,7 @@ pets:
   * object: 'obj'
     inList: true
     nested.path.works: true
-multiLineText: '''
+multiLineText: """"
 Hello World!
 I'm long text spanning multiple lines.
-'''
+"""
