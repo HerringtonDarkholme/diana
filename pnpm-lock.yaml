@@ -6,16 +6,36 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      oxlint:
+        specifier: ^1.1.0
+        version: 1.1.0
 
   packages/diana-lang:
     devDependencies:
       '@types/node':
         specifier: ^24.0.1
         version: 24.0.1
-      oxlint:
-        specifier: ^1.1.0
-        version: 1.1.0
+      typescript:
+        specifier: ^5.0.0
+        version: 5.8.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@24.0.1)
+
+  packages/vscode:
+    dependencies:
+      diana-lang:
+        specifier: workspace:^0.1.0
+        version: link:../diana-lang
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.1
+        version: 24.0.1
+      '@types/vscode':
+        specifier: ^1.80.0
+        version: 1.101.0
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
@@ -321,6 +341,9 @@ packages:
 
   '@types/node@24.0.1':
     resolution: {integrity: sha512-MX4Zioh39chHlDJbKmEgydJDS3tspMP/lnQC67G3SWsTnb9NeYVWOjkxpOSy4oMfPs4StcWHwBrvUb4ybfnuaw==}
+
+  '@types/vscode@1.101.0':
+    resolution: {integrity: sha512-ZWf0IWa+NGegdW3iU42AcDTFHWW7fApLdkdnBqwYEtHVIBGbTu0ZNQKP/kX3Ds/uMJXIMQNAojHR4vexCEEz5Q==}
 
   '@vitest/expect@1.6.1':
     resolution: {integrity: sha512-jXL+9+ZNIJKruofqXuuTClf44eSpcHlgj3CiuNihUF3Ioujtmc0zIa3UJOW5RjDK1YLBJZnWBlPuqhYycLioog==}
@@ -813,6 +836,8 @@ snapshots:
   '@types/node@24.0.1':
     dependencies:
       undici-types: 7.8.0
+
+  '@types/vscode@1.101.0': {}
 
   '@vitest/expect@1.6.1':
     dependencies:

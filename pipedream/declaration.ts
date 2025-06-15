@@ -27,6 +27,7 @@ export class User {
   age = Int
   extra = Dictionary()
   friends = List.of(User)
+  balance = Decimal
   get fullName() {
     return this.firstName + ' ' + this.lastName
   }
