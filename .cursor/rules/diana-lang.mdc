@@ -13,9 +13,10 @@ alwaysApply: false
 - Follow the structure and conventions established in `src/tokenizer.ts` and `src/parser.ts` for new language features.
 
 ## Project Layout
-- All source code must be placed in the `src/` directory.
-- All tests must be placed in the `test/` directory, mirroring the structure of `src/` where possible.
-- Project configuration files (e.g., `package.json`, `tsconfig.json`) must be in the project root.
+- All package-specific source code must be placed in a `src/` directory within its respective package (e.g., `packages/diana-lang/src`).
+- All package-specific tests must be placed in a `test/` directory within its respective package, mirroring the structure of `src/` where possible (e.g., `packages/diana-lang/test`).
+- Project configuration files (e.g., `package.json`, `tsconfig.json`) for individual packages must be in the package root.
+- Workspace-level configuration files (e.g., `pnpm-workspace.yaml`, root `tsconfig.json`) must be in the project root.
 - Cursor rules must be placed in `.cursor/rules/`.
 
 ## Naming Conventions
