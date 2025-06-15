@@ -103,15 +103,36 @@ export function tokenize(input: string): Token[] {
 
   while (pos < input.length) {
     let ch = peek()
+    
     // Handle comments
     if (ch === ';') {
-      let comment = ''
-      while (peek() && peek() !== '\n') {
-        comment += peek()
-        advance()
+      // Check for block comment
+      if (peek(1) === ';' && peek(2) === ';') {
+        advance(3); // skip opening ;;;
+        let comment = ';;;'
+        
+        // Read until closing ;;;
+        while (pos < input.length) {
+          if (peek() === ';' && peek(1) === ';' && peek(2) === ';') {
+            comment += ';;;'
+            advance(3); // skip closing ;;;
+            break
+          }
+          comment += peek()
+          advance()
+        }
+        addToken('COMMENT', comment)
+        continue
+      } else {
+        // Line comment
+        let comment = ''
+        while (peek() && peek() !== '\n') {
+          comment += peek()
+          advance()
+        }
+        addToken('COMMENT', comment)
+        continue
       }
-      addToken('COMMENT', comment)
-      continue
     }
     // Handle whitespace
     if (isWhitespace(ch)) {

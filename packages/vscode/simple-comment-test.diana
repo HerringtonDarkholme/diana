@@ -1,0 +1,16 @@
+; Line comment
+app_name: "Test App"
+
+;;;
+This is a block comment
+that spans multiple lines
+;;;
+
+version: "1.0.0"
+
+;;;
+Another block comment
+with more content
+;;;
+
+debug: true 

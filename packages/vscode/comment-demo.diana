@@ -1,0 +1,40 @@
+; Line comment example
+; This is a traditional line comment in Diana
+
+app_name: "Diana Comment Demo"
+
+;;;
+This is a new block comment feature!
+
+Block comments are great for:
+- Multi-line documentation
+- Temporary code removal
+- Header comments for sections
+- Any text that spans multiple lines
+
+You can put anything here including:
+- Special characters: !@#$%^&*()
+- Code examples: key: "value"
+- Multiple paragraphs
+
+And it all stays commented until the closing ;;;
+;;;
+
+; Configuration section
+server:
+  host: "localhost"
+  port: 8080
+  
+;;;
+TODO: Add more server configuration options
+- SSL certificates
+- Load balancing settings
+- Health check endpoints
+;;;
+
+; Database settings
+database:
+  url: "postgresql://localhost/mydb"
+  pool_size: 10
+
+; End of configuration 

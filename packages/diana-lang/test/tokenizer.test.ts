@@ -16,6 +16,14 @@ describe('tokenizer', () => {
     expect(tokens.some(t => t.type === 'COMMENT')).toBe(true);
   });
 
+  it('should tokenize block comments', () => {
+    const input = ';;; this is a\nmulti-line\nblock comment ;;;\nkey: 1';
+    const tokens = tokenize(input);
+    const comment = tokens.find(t => t.type === 'COMMENT');
+    expect(comment).toBeDefined();
+    expect(comment?.value).toBe(';;; this is a\nmulti-line\nblock comment ;;;');
+  });
+
   it('should tokenize strings', () => {
     const input = 'string: "value"';
     const tokens = tokenize(input);

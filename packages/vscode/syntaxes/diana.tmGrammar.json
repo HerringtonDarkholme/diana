@@ -35,6 +35,17 @@
     "comments": {
       "patterns": [
         {
+          "name": "comment.block.diana",
+          "begin": ";;;",
+          "end": ";;;",
+          "patterns": [
+            {
+              "name": "comment.block.content.diana",
+              "match": ".*"
+            }
+          ]
+        },
+        {
           "name": "comment.line.semicolon.diana",
           "match": ";.*$"
         }

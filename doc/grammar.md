@@ -14,11 +14,32 @@ Diana is a configuration language designed for clarity and tooling support. This
 ## 2. Syntax Basics
 
 ### Comments
-Comments start with `;` and continue to the end of the line:
+Diana supports both line comments and block comments:
+
+#### Line Comments
+Line comments start with `;` and continue to the end of the line:
 
 ```diana
 ; This is a comment
 key: "value"  ; This is also a comment
+```
+
+#### Block Comments
+Block comments start with `;;;` and end with `;;;`, allowing multi-line comments:
+
+```diana
+;;;
+This is a block comment that can span
+multiple lines and is useful for longer
+explanations or documentation.
+;;;
+
+key: "value"
+
+;;;
+Another block comment
+with more content
+;;;
 ```
 
 ### Indentation and Block Structure
@@ -704,7 +725,7 @@ logging:
 ### Token Types
 The Diana tokenizer recognizes these token types:
 
-- `COMMENT` - Comments starting with `;`
+- `COMMENT` - Comments starting with `;` (line comments) or delimited by `;;;` (block comments)
 - `IDENTIFIER` - Keys and identifiers
 - `NUMBER` - Numeric values (int, float, scientific)
 - `STRING` - String literals in double quotes
