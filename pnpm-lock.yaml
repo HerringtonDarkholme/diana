@@ -6,7 +6,9 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  packages/diana-lang:
     devDependencies:
       '@types/node':
         specifier: ^24.0.1

@@ -1,27 +1,14 @@
 {
-  "name": "diana-lang",
+  "name": "diana-monorepo",
   "version": "0.1.0",
-  "description": "Diana programming language tooling in TypeScript",
-  "main": "dist/index.js",
+  "private": true,
+  "description": "Monorepo for Diana programming language tooling",
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "oxlint src test"
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
   },
-  "keywords": [
-    "diana",
-    "language",
-    "parser",
-    "lsp",
-    "highlighting"
-  ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
-    "@types/node": "^24.0.1",
-    "oxlint": "^1.1.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0"
+    "oxlint": "^1.1.0"
   }
 }
