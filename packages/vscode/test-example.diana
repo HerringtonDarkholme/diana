@@ -1,0 +1,73 @@
+; Diana Configuration Language Example
+; This file demonstrates the various features of Diana
+
+; Basic data types
+app_name: "My Diana Application"
+version: "1.0.0"
+debug: true
+port: 8080
+timeout: 30.5
+max_connections: null
+
+; Scientific notation
+avogadro: 6.0221409e+23
+small_number: 1.23e-10
+
+; Multi-line string
+description: """
+This is a multi-line string
+that can span multiple lines
+and preserves formatting.
+"""
+
+; Objects with various key types
+server:
+  host: "localhost"
+  port: 3000
+  ssl: false
+  
+; Dot notation keys
+database.primary.host: "db1.example.com"
+database.primary.port: 5432
+database.replica.host: "db2.example.com"
+
+; Quoted keys with special characters
+"key with spaces": "value"
+"special-chars!@#": "another value"
+
+; Computed keys
+[123]: "numeric key"
+[true]: "boolean key" 
+["complex.key"]: "string key with dots"
+
+; Inline objects
+config: { timeout: 5000, retries: 3, enabled: true }
+
+; Lists with asterisk notation
+features:
+  * "authentication"
+  * "logging"
+  * "monitoring"
+  * "caching"
+
+; Inline arrays
+numbers: [1, 2, 3, 4, 5]
+colors: ["red", "green", "blue"]
+mixed: [1, "two", true, null]
+
+; Complex nested structure
+application:
+  name: "Web Service"
+  environments:
+    development:
+      api_url: "http://localhost:3000"
+      debug: true
+    production:
+      api_url: "https://api.example.com" 
+      debug: false
+  
+; Mixed styles
+routes: [
+  { path: "/api/*", handler: "api_handler" },
+  { path: "/static/*", handler: "static_handler" }
+] 

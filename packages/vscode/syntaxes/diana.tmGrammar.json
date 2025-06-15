@@ -13,13 +13,13 @@
       "include": "#numbers"
     },
     {
-      "include": "#keywords"
+      "include": "#constants"
     },
     {
-      "include": "#identifiers"
+      "include": "#keys"
     },
     {
-      "include": "#operators"
+      "include": "#list-markers"
     },
     {
       "include": "#punctuation"
@@ -29,23 +29,34 @@
     "comments": {
       "patterns": [
         {
-          "name": "comment.line.double-slash.diana",
-          "begin": "//",
-          "end": "$"
-        },
-        {
-          "name": "comment.block.diana",
-          "begin": "/\\*",
-          "end": "\\*/"
+          "name": "comment.line.semicolon.diana",
+          "begin": ";",
+          "end": "$",
+          "patterns": [
+            {
+              "name": "punctuation.definition.comment.diana",
+              "match": ";"
+            }
+          ]
         }
       ]
     },
     "strings": {
       "patterns": [
         {
-          "name": "string.quoted.double.diana",
-          "begin": "\"",
-          "end": "\"",
+          "name": "string.quoted.triple.diana",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.diana"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.diana"
+            }
+          },
           "patterns": [
             {
               "name": "constant.character.escape.diana",
@@ -54,10 +65,24 @@
           ]
         },
         {
-          "name": "string.quoted.single.diana",
-          "begin": "'",
-          "end": "'",
+          "name": "string.quoted.double.diana",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.diana"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.diana"
+            }
+          },
           "patterns": [
+            {
+              "name": "constant.character.escape.diana",
+              "match": "\\\\[\"\\\\nrtbfav]"
+            },
             {
               "name": "constant.character.escape.diana",
               "match": "\\\\."
@@ -69,80 +94,114 @@
     "numbers": {
       "patterns": [
         {
-          "name": "constant.numeric.decimal.diana",
-          "match": "\\b[0-9]+\\.?[0-9]*\\b"
+          "name": "constant.numeric.scientific.diana",
+          "match": "\\b-?[0-9]+\\.?[0-9]*[eE][+-]?[0-9]+\\b"
         },
         {
           "name": "constant.numeric.hex.diana",
           "match": "\\b0[xX][0-9a-fA-F]+\\b"
+        },
+        {
+          "name": "constant.numeric.float.diana",
+          "match": "\\b-?[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.diana",
+          "match": "\\b-?[0-9]+\\b"
         }
       ]
     },
-    "keywords": {
+    "constants": {
       "patterns": [
         {
-          "name": "keyword.control.diana",
-          "match": "\\b(if|else|while|for|break|continue|return|match|case|default)\\b"
+          "name": "constant.language.boolean.diana",
+          "match": "\\b(true|false)\\b"
         },
         {
-          "name": "keyword.declaration.diana",
-          "match": "\\b(let|const|var|fn|struct|enum|trait|impl|use|mod|pub)\\b"
-        },
-        {
-          "name": "storage.type.diana",
-          "match": "\\b(int|float|string|bool|array|object)\\b"
-        },
-        {
-          "name": "constant.language.diana",
-          "match": "\\b(true|false|null|undefined)\\b"
+          "name": "constant.language.null.diana",
+          "match": "\\bnull\\b"
         }
       ]
     },
-    "identifiers": {
+    "keys": {
       "patterns": [
         {
-          "name": "variable.other.diana",
-          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+          "name": "entity.name.tag.computed-key.diana",
+          "begin": "\\[",
+          "end": "\\]",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.computed-key.begin.diana"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.computed-key.end.diana"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#numbers"
+            },
+            {
+              "include": "#constants"
+            }
+          ]
+        },
+        {
+          "name": "entity.name.tag.quoted-key.diana",
+          "match": "\"[^\"]*\"(?=\\s*:)"
+        },
+        {
+          "name": "entity.name.tag.key-path.diana",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*(?=\\s*:)"
         }
       ]
     },
-    "operators": {
+    "list-markers": {
       "patterns": [
         {
-          "name": "keyword.operator.assignment.diana",
-          "match": "=|\\+=|\\-=|\\*=|\\/=|%="
-        },
-        {
-          "name": "keyword.operator.comparison.diana",
-          "match": "==|!=|<|>|<=|>="
-        },
-        {
-          "name": "keyword.operator.logical.diana",
-          "match": "&&|\\|\\||!"
-        },
-        {
-          "name": "keyword.operator.arithmetic.diana",
-          "match": "\\+|\\-|\\*|\\/|%"
+          "name": "punctuation.definition.list.item.diana",
+          "match": "^\\s*\\*"
         }
       ]
     },
     "punctuation": {
       "patterns": [
         {
-          "name": "punctuation.separator.diana",
-          "match": ",|;"
+          "name": "punctuation.separator.key-value.diana",
+          "match": ":"
         },
         {
-          "name": "punctuation.definition.block.diana",
-          "match": "[{}]"
+          "name": "punctuation.separator.sequence.diana",
+          "match": ","
         },
         {
-          "name": "punctuation.definition.array.diana",
-          "match": "[\\[\\]]"
+          "name": "punctuation.definition.dictionary.begin.diana",
+          "match": "\\{"
         },
         {
-          "name": "punctuation.definition.parameters.diana",
-          "match": "[()]"
+          "name": "punctuation.definition.dictionary.end.diana",
+          "match": "\\}"
+        },
+        {
+          "name": "punctuation.definition.array.begin.diana",
+          "match": "\\["
+        },
+        {
+          "name": "punctuation.definition.array.end.diana",
+          "match": "\\]"
+        },
+        {
+          "name": "punctuation.definition.group.begin.diana",
+          "match": "\\("
+        },
+        {
+          "name": "punctuation.definition.group.end.diana",
+          "match": "\\)"
         }
       ]
     }
