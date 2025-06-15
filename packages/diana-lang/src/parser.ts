@@ -165,6 +165,8 @@ export function parse(tokens: Token[]): ASTNode {
         return parseObject()
       case 'LBRACKET':
         return parseList()
+      case 'INDENT':
+        return parseIndentedList()
       case 'IDENTIFIER':
         // For onelineObj: { a.b.c: 2, c.d: 1 }
         // or for topLevel.nested.value: "of course"
@@ -214,6 +216,64 @@ export function parse(tokens: Token[]): ASTNode {
     }
     expect('RBRACKET')
     return { type: 'List', items }
+  }
+
+  function parseIndentedList(): ListNode {
+    expect('INDENT')
+    const items: ASTNode[] = []
+    
+    while (peek() && peek().type !== 'DEDENT' && peek().type !== 'EOF') {
+      if (peek().type === 'ASTERISK') {
+        next() // consume the *
+        skipNewlines()
+        
+        // Parse the item after the *
+        // This could be a simple value or an object with key-value pairs
+        const item = parseListItem()
+        items.push(item)
+        skipNewlines()
+      } else {
+        next() // skip unknown tokens
+      }
+    }
+    
+    if (peek() && peek().type === 'DEDENT') {
+      next() // consume DEDENT
+    }
+    
+    return { type: 'List', items }
+  }
+
+  function parseListItem(): ASTNode {
+    // Check if this is a key-value pair or just a simple value
+    const token = peek()
+    if (!token) throw new Error('Unexpected end of input in list item')
+    
+    if (token.type === 'IDENTIFIER' && peek(1) && peek(1).type === 'COLON') {
+      // This is a key-value pair, parse as object
+      const properties: KeyValueNode[] = []
+      
+      // Parse the first key-value pair
+      properties.push(parseKeyValue())
+      skipNewlines()
+      
+      // Check for additional indented key-value pairs
+      while (peek() && peek().type === 'INDENT') {
+        next() // consume INDENT
+        if (peek() && peek().type === 'IDENTIFIER' && peek(1) && peek(1).type === 'COLON') {
+          properties.push(parseKeyValue())
+          skipNewlines()
+        }
+        if (peek() && peek().type === 'DEDENT') {
+          next() // consume DEDENT
+        }
+      }
+      
+      return { type: 'Object', properties }
+    } else {
+      // Simple value
+      return parseValue()
+    }
   }
 
   return parseProgram()

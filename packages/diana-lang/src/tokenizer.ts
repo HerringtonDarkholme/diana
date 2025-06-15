@@ -174,6 +174,7 @@ export function tokenize(input: string): Token[] {
       }
     }
     if (ch === ']') { addToken('RBRACKET'); advance(); continue; }
+    if (ch === '*') { addToken('ASTERISK'); advance(); continue; }
     // Handle quoted keys or strings
     if (ch === '"') {
       // Check for triple-quoted string
@@ -211,6 +212,20 @@ export function tokenize(input: string): Token[] {
           continue
         }
       }
+    }
+    // Handle single-quoted strings
+    if (ch === "'") {
+      advance(); // skip opening '
+      let str = ''
+      while (peek() && peek() !== "'") {
+        str += peek()
+        advance()
+      }
+      if (peek() === "'") {
+        advance(); // skip closing '
+      }
+      addToken('STRING', str)
+      continue
     }
     // Handle number (int, float, scientific)
     if (isDigit(ch) || (ch === '-' && isDigit(peek(1)))) {

@@ -227,4 +227,30 @@ debug: true
     const result = compileToJson(input);
     expect(result).toMatchSnapshot();
   });
+
+  it('should compile indented lists with asterisk syntax', () => {
+    const input = `
+pets:
+  * object: 'obj'
+    inList: true
+  * name: "Fluffy"
+    type: "cat"
+    age: 3
+
+config:
+  * feature: "auth"
+    enabled: true
+  * feature: "logging"
+    enabled: false
+    level: "debug"
+
+simple_list:
+  * "item1"
+  * "item2"
+  * "item3"
+    `.trim();
+    
+    const result = compileToJson(input);
+    expect(result).toMatchSnapshot();
+  });
 }); 

@@ -116,6 +116,138 @@ describe('parser', () => {
     const kv = ast.children[1] as KeyValueNode;
     expect(kv.type).toBe('KeyValue');
   });
+
+  it('should parse indented lists with asterisk syntax', () => {
+    const input = `pets:
+  * object: 'obj'
+    inList: true
+  * name: "Fluffy"
+    type: "cat"`;
+    
+    const ast = parse(tokenize(input)) as ProgramNode;
+    expect(ast.type).toBe('Program');
+    expect(ast.children.length).toBe(1);
+    
+    const kv = ast.children[0] as KeyValueNode;
+    expect(kv.type).toBe('KeyValue');
+    
+    // Check the key
+    if (kv.key.type === 'KeyPath') {
+      expect(kv.key.path).toEqual(['pets']);
+    } else {
+      throw new Error('Expected KeyPath for key');
+    }
+    
+    // Check the value is a list
+    if (kv.value.type === 'List') {
+      const items = kv.value.items;
+      expect(items.length).toBe(2);
+      
+      // Check first list item
+      if (items[0].type === 'Object') {
+        const props = items[0].properties;
+        expect(props.length).toBe(2);
+        
+        // Check first property: object: 'obj'
+        if (props[0].key.type === 'KeyPath') {
+          expect(props[0].key.path).toEqual(['object']);
+        } else {
+          throw new Error('Expected KeyPath for first property');
+        }
+        if (props[0].value.type === 'String') {
+          expect(props[0].value.value).toBe('obj');
+        } else {
+          throw new Error('Expected String for first property value');
+        }
+        
+        // Check second property: inList: true
+        if (props[1].key.type === 'KeyPath') {
+          expect(props[1].key.path).toEqual(['inList']);
+        } else {
+          throw new Error('Expected KeyPath for second property');
+        }
+        if (props[1].value.type === 'Boolean') {
+          expect(props[1].value.value).toBe(true);
+        } else {
+          throw new Error('Expected Boolean for second property value');
+        }
+      } else {
+        throw new Error('Expected Object for first list item');
+      }
+      
+      // Check second list item
+      if (items[1].type === 'Object') {
+        const props = items[1].properties;
+        expect(props.length).toBe(2);
+        
+        // Check first property: name: "Fluffy"
+        if (props[0].key.type === 'KeyPath') {
+          expect(props[0].key.path).toEqual(['name']);
+        } else {
+          throw new Error('Expected KeyPath for name property');
+        }
+        if (props[0].value.type === 'String') {
+          expect(props[0].value.value).toBe('Fluffy');
+        } else {
+          throw new Error('Expected String for name property value');
+        }
+        
+        // Check second property: type: "cat"
+        if (props[1].key.type === 'KeyPath') {
+          expect(props[1].key.path).toEqual(['type']);
+        } else {
+          throw new Error('Expected KeyPath for type property');
+        }
+        if (props[1].value.type === 'String') {
+          expect(props[1].value.value).toBe('cat');
+        } else {
+          throw new Error('Expected String for type property value');
+        }
+      } else {
+        throw new Error('Expected Object for second list item');
+      }
+    } else {
+      throw new Error('Expected List for value');
+    }
+  });
+
+  it('should parse indented lists with simple values', () => {
+    const input = `items:
+  * "item1"
+  * "item2"
+  * "item3"`;
+    
+    const ast = parse(tokenize(input)) as ProgramNode;
+    expect(ast.type).toBe('Program');
+    expect(ast.children.length).toBe(1);
+    
+    const kv = ast.children[0] as KeyValueNode;
+    expect(kv.type).toBe('KeyValue');
+    
+    // Check the key
+    if (kv.key.type === 'KeyPath') {
+      expect(kv.key.path).toEqual(['items']);
+    } else {
+      throw new Error('Expected KeyPath for key');
+    }
+    
+    // Check the value is a list
+    if (kv.value.type === 'List') {
+      const items = kv.value.items;
+      expect(items.length).toBe(3);
+      
+             // Check all items are strings
+       for (let i = 0; i < items.length; i++) {
+         if (items[i].type === 'String') {
+           expect((items[i] as any).value).toBe(`item${i + 1}`);
+         } else {
+           throw new Error(`Expected String for item ${i + 1}`);
+         }
+       }
+    } else {
+      throw new Error('Expected List for value');
+    }
+  });
 });
 
 describe('KeyValueNode key types', () => {

@@ -92,6 +92,36 @@ exports[`Diana E2E Snapshot Tests > should compile dot notation keys 1`] = `
 }
 `;
 
+exports[`Diana E2E Snapshot Tests > should compile indented lists with asterisk syntax 1`] = `
+{
+  "config": [
+    {
+      "enabled": true,
+      "feature": "auth",
+    },
+    {
+      "enabled": false,
+      "feature": "logging",
+    },
+  ],
+  "pets": [
+    {
+      "inList": true,
+      "object": "obj",
+    },
+    {
+      "name": "Fluffy",
+      "type": "cat",
+    },
+  ],
+  "simple_list": [
+    "item1",
+    "item2",
+    "item3",
+  ],
+}
+`;
+
 exports[`Diana E2E Snapshot Tests > should compile mixed data types and null values 1`] = `
 {
   "boolean_false": false,
