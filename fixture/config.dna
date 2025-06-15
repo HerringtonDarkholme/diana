@@ -27,7 +27,7 @@ object:
       moreNested: "nest"
   name.value.test: 123
   [123]: "number key"
-  ["name.value.test"]: "you have dot in key"
+  "name.value.test": "you have dot in key"
 topLevel.nested.value: "of course"
 onelineObj: { a.b.c: 2, c.d: 1 }
 indentationIgnoratObj: {
@@ -40,9 +40,9 @@ indentationIgnoratObj: {
 
 ; List
 list:
-  * list
-  * item2
-  * item3
+  * 123
+  * 456
+  * 789
 oneline: [1, 2, 3, 4]
 spanline: [
   1,
@@ -52,3 +52,5 @@ spanline: [
   3,
   4,
 ]
+
+* "test"

@@ -151,7 +151,7 @@
     "list-markers": {
       "patterns": [
         {
-          "name": "punctuation.definition.list.item.diana",
+          "name": "markup.list.unnumbered.diana",
           "match": "^\\s*\\*"
         }
       ]

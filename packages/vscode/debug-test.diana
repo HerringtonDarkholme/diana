@@ -13,4 +13,10 @@ name: "value"
 nested.path: "nested value"
 
 ; Just a string (not a key)
-some_other_text: "this is just a string value" 
+some_other_text: "this is just a string value"
+
+; List with asterisk markers
+items:
+  * "first item"
+  * "second item"
+  * "third item" 
