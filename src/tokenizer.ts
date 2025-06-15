@@ -232,7 +232,5 @@ export function tokenize(input: string): Token[] {
     addToken('DEDENT');
   }
   addToken('EOF');
-  // DEBUG: Print all tokens for troubleshooting
-  console.log(JSON.stringify(tokens, null, 2));
   return tokens;
 } 
