@@ -41,11 +41,11 @@ function isDigit(ch: string) {
 }
 
 function isIdentifierStart(ch: string) {
-  return /[A-Za-z_\[\]\.\-\d"]/i.test(ch);
+  return /[A-Za-z_[\].\-\d"]/i.test(ch);
 }
 
 function isIdentifierChar(ch: string) {
-  return /[A-Za-z0-9_\.\-\[\]"]/i.test(ch);
+  return /[A-Za-z0-9_.\-[\]"]/i.test(ch);
 }
 
 export function tokenize(input: string): Token[] {

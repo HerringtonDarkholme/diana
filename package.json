@@ -6,12 +6,20 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "oxlint src test"
   },
-  "keywords": ["diana", "language", "parser", "lsp", "highlighting"],
+  "keywords": [
+    "diana",
+    "language",
+    "parser",
+    "lsp",
+    "highlighting"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "oxlint": "^1.1.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
   }
