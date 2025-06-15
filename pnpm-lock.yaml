@@ -1,13 +1,29 @@
-lockfileVersion: 5.3
+lockfileVersion: '9.0'
 
-specifiers:
-  '@types/node': ^18.7.13
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
-dependencies:
-  '@types/node': 18.7.13
+importers:
+
+  .:
+    dependencies:
+      '@types/node':
+        specifier: ^18.7.13
+        version: 18.19.111
 
 packages:
 
-  /@types/node/18.7.13:
-    resolution: {integrity: sha512-46yIhxSe5xEaJZXWdIBP7GU4HDTG8/eo0qd9atdiL+lFpA03y8KS+lkTN834TWJj5767GbWv4n/P6efyTFt1Dw==}
-    dev: false
+  '@types/node@18.19.111':
+    resolution: {integrity: sha512-90sGdgA+QLJr1F9X79tQuEut0gEYIfkX9pydI4XGRgvFo9g2JWswefI+WUSUHPYVBHYSEfTEqBxA5hQvAZB3Mw==}
+
+  undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+
+snapshots:
+
+  '@types/node@18.19.111':
+    dependencies:
+      undici-types: 5.26.5
+
+  undici-types@5.26.5: {}
