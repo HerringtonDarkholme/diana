@@ -55,12 +55,18 @@ describe('compiler', () => {
   it('should compile oneline object', () => {
     const input = 'onelineObj: { a.b.c: 2, c.d: 1 }';
     const output = compile(parse(tokenize(input)));
-    expect(output).toEqual({ onelineObj: { 'a.b.c': 2, 'c.d': 1 } });
+    expect(output).toEqual({ onelineObj: { a: { b: { c: 2 } }, c: { d: 1 } } });
   });
 
   it('should compile oneline list', () => {
     const input = 'oneline: [1, 2, 3, 4]';
     const output = compile(parse(tokenize(input)));
     expect(output).toEqual({ oneline: [1, 2, 3, 4] });
+  });
+
+  it('should compile deeply nested objects from dot notation', () => {
+    const input = 'a.b.c: 123';
+    const output = compile(parse(tokenize(input)));
+    expect(output).toEqual({ a: { b: { c: 123 } } });
   });
 }); 

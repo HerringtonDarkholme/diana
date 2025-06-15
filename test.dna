@@ -1,0 +1,3 @@
+; Diction
+topLevel.nested.value: "of course"
+onelineObj: { a.b.c: 2, c.d: 1 }
