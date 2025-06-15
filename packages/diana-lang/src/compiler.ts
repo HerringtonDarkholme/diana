@@ -19,38 +19,34 @@ export function compile(ast: ASTNode): any {
     case 'KeyValue': {
       const { key, value } = ast as KeyValueNode;
       const compiledValue = compile(value);
-
-      let processedKey = key;
-      if (key.startsWith('"') && key.endsWith('"')) {
-        // If the key is quoted, remove the quotes
-        processedKey = key.slice(1, -1);
-      } else if (key.startsWith('[') && key.endsWith(']')) {
-        // If the key is bracketed, remove the brackets
-        processedKey = key.slice(1, -1);
-        // If the content inside brackets is a string, remove its quotes
-        if (processedKey.startsWith('"') && processedKey.endsWith('"')) {
-          processedKey = processedKey.slice(1, -1);
-        }
-      }
-
-      if (processedKey.includes('.') && !key.startsWith('"') && !key.startsWith('[')) {
-        // Handle dot notation for unquoted and unbracketed keys
-        const keys = processedKey.split('.');
-        let currentObj: Record<string, any> = {};
-        let rootObj = currentObj;
-
-        for (let i = 0; i < keys.length; i++) {
-          const k = keys[i];
-          if (i === keys.length - 1) {
-            currentObj[k] = compiledValue;
-          } else {
-            currentObj[k] = {};
-            currentObj = currentObj[k];
+      let processedKey: string | number | boolean;
+      if (key.type === 'KeyPath') {
+        // Handle dot notation for nested keys
+        if (key.path.length === 1) {
+          processedKey = key.path[0];
+          return { [processedKey]: compiledValue };
+        } else {
+          let currentObj: Record<string, any> = {};
+          let rootObj = currentObj;
+          for (let i = 0; i < key.path.length; i++) {
+            const k = key.path[i];
+            if (i === key.path.length - 1) {
+              currentObj[k] = compiledValue;
+            } else {
+              currentObj[k] = {};
+              currentObj = currentObj[k];
+            }
           }
+          return rootObj;
         }
-        return rootObj;
-      } else {
+      } else if (key.type === 'StringKey') {
+        processedKey = key.value;
         return { [processedKey]: compiledValue };
+      } else if (key.type === 'ComputedKey') {
+        processedKey = typeof key.value === 'boolean' ? String(key.value) : key.value;
+        return { [processedKey]: compiledValue };
+      } else {
+        throw new Error(`Unknown key type: ${(key as any).type}`);
       }
     }
     case 'Object': {

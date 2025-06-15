@@ -14,6 +14,11 @@ export type ASTNode =
   | IdentifierNode
   | CommentNode
 
+export type KeyNode = 
+  | { type: 'KeyPath', path: string[] } // keypath: single or nested.level.key
+  | { type: 'StringKey', value: string } // string key: "in quote" or "dot.allowed.in.key"
+  | { type: 'ComputedKey', value: number | boolean } // computed key: [123] or [true]/[false]
+
 export interface ProgramNode {
   type: 'Program'
   children: ASTNode[]
@@ -21,7 +26,7 @@ export interface ProgramNode {
 
 export interface KeyValueNode {
   type: 'KeyValue'
-  key: string
+  key: KeyNode
   value: ASTNode
 }
 
@@ -111,11 +116,33 @@ export function parse(tokens: Token[]): ASTNode {
 
   function parseKeyValue(): KeyValueNode {
     const keyToken = expect('IDENTIFIER')
+    let key: KeyNode
+    const raw = keyToken.value || ''
+    if (raw.startsWith('[') && raw.endsWith(']')) {
+      // Bracketed key: could be string, number, or boolean
+      const inner = raw.slice(1, -1)
+      if (inner.startsWith('"') && inner.endsWith('"')) {
+        // Bracketed string key: ["name.value.test"]
+        key = { type: 'StringKey', value: inner.slice(1, -1) }
+      } else if (inner === 'true' || inner === 'false') {
+        key = { type: 'ComputedKey', value: inner === 'true' }
+      } else if (!isNaN(Number(inner))) {
+        key = { type: 'ComputedKey', value: Number(inner) }
+      } else {
+        throw new Error(`Invalid computed key: ${raw}`)
+      }
+    } else if (raw.startsWith('"') && raw.endsWith('"')) {
+      // String key: "in quote" or "dot.allowed.in.key"
+      key = { type: 'StringKey', value: raw.slice(1, -1) }
+    } else {
+      // KeyPath: single or nested.level.key
+      key = { type: 'KeyPath', path: raw.split('.') }
+    }
     skipNewlines()
     expect('COLON')
     skipNewlines()
     const value = parseValue()
-    return { type: 'KeyValue', key: keyToken.value || '', value }
+    return { type: 'KeyValue', key, value }
   }
 
   function parseValue(): ASTNode {
