@@ -160,18 +160,40 @@ export function tokenize(input: string): Token[] {
     if (ch === ']') { addToken('RBRACKET'); advance(); continue; }
     // Handle quoted keys or strings
     if (ch === '"') {
-      let start = pos
-      advance(); // skip opening "
-      readWhile(c => c !== '"')
-      advance(); // skip closing "
-      let str = input.slice(start, pos) // includes quotes
-      skipWhitespace()
-      if (peek() === ':') {
-        addToken('IDENTIFIER', str)
-        continue
+      // Check for triple-quoted string
+      if (peek(1) === '"' && peek(2) === '"') {
+        // Triple-quoted string
+        advance(3); // skip opening """
+        let str = '';
+        while (pos < input.length && !(peek() === '"' && peek(1) === '"' && peek(2) === '"')) {
+          str += peek();
+          advance();
+        }
+        if (peek() === '"' && peek(1) === '"' && peek(2) === '"') {
+          advance(3); // skip closing """
+        }
+        skipWhitespace();
+        if (peek() === ':') {
+          addToken('IDENTIFIER', '"""' + str + '"""');
+          continue;
+        } else {
+          addToken('STRING', str);
+          continue;
+        }
       } else {
-        addToken('STRING', str.slice(1, -1))
-        continue
+        let start = pos;
+        advance(); // skip opening "
+        readWhile(c => c !== '"')
+        advance(); // skip closing "
+        let str = input.slice(start, pos); // includes quotes
+        skipWhitespace();
+        if (peek() === ':') {
+          addToken('IDENTIFIER', str)
+          continue
+        } else {
+          addToken('STRING', str.slice(1, -1))
+          continue
+        }
       }
     }
     // Handle number (int, float, scientific)
