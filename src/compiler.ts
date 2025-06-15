@@ -20,12 +20,22 @@ export function compile(ast: ASTNode): any {
       const { key, value } = ast as KeyValueNode;
       const compiledValue = compile(value);
 
+      let processedKey = key;
       if (key.startsWith('"') && key.endsWith('"')) {
-        // If the key is quoted, use it as is (without quotes)
-        return { [key.slice(1, -1)]: compiledValue };
-      } else {
-        // Handle dot notation for nested objects
-        const keys = key.split('.');
+        // If the key is quoted, remove the quotes
+        processedKey = key.slice(1, -1);
+      } else if (key.startsWith('[') && key.endsWith(']')) {
+        // If the key is bracketed, remove the brackets
+        processedKey = key.slice(1, -1);
+        // If the content inside brackets is a string, remove its quotes
+        if (processedKey.startsWith('"') && processedKey.endsWith('"')) {
+          processedKey = processedKey.slice(1, -1);
+        }
+      }
+
+      if (processedKey.includes('.') && !key.startsWith('"') && !key.startsWith('[')) {
+        // Handle dot notation for unquoted and unbracketed keys
+        const keys = processedKey.split('.');
         let currentObj: Record<string, any> = {};
         let rootObj = currentObj;
 
@@ -39,6 +49,8 @@ export function compile(ast: ASTNode): any {
           }
         }
         return rootObj;
+      } else {
+        return { [processedKey]: compiledValue };
       }
     }
     case 'Object': {
