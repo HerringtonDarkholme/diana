@@ -69,4 +69,10 @@ describe('compiler', () => {
     const output = compile(parse(tokenize(input)));
     expect(output).toEqual({ a: { b: { c: 123 } } });
   });
+
+  it('should compile a quoted key with dots as a single key', () => {
+    const input = '"name.value.test": "you have dot in key" ';
+    const output = compile(parse(tokenize(input)));
+    expect(output).toEqual({ "name.value.test": "you have dot in key" });
+  });
 }); 

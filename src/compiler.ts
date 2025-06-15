@@ -18,22 +18,28 @@ export function compile(ast: ASTNode): any {
     }
     case 'KeyValue': {
       const { key, value } = ast as KeyValueNode;
-      // Handle dot notation for nested objects
       const compiledValue = compile(value);
-      const keys = key.split('.');
-      let currentObj: Record<string, any> = {};
-      let rootObj = currentObj;
 
-      for (let i = 0; i < keys.length; i++) {
-        const k = keys[i];
-        if (i === keys.length - 1) {
-          currentObj[k] = compiledValue;
-        } else {
-          currentObj[k] = {};
-          currentObj = currentObj[k];
+      if (key.startsWith('"') && key.endsWith('"')) {
+        // If the key is quoted, use it as is (without quotes)
+        return { [key.slice(1, -1)]: compiledValue };
+      } else {
+        // Handle dot notation for nested objects
+        const keys = key.split('.');
+        let currentObj: Record<string, any> = {};
+        let rootObj = currentObj;
+
+        for (let i = 0; i < keys.length; i++) {
+          const k = keys[i];
+          if (i === keys.length - 1) {
+            currentObj[k] = compiledValue;
+          } else {
+            currentObj[k] = {};
+            currentObj = currentObj[k];
+          }
         }
+        return rootObj;
       }
-      return rootObj;
     }
     case 'Object': {
       const obj: Record<string, any> = {};
