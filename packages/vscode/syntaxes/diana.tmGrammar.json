@@ -7,6 +7,15 @@
       "include": "#comments"
     },
     {
+      "include": "#computed-keys"
+    },
+    {
+      "include": "#quoted-keys"
+    },
+    {
+      "include": "#simple-keys"
+    },
+    {
       "include": "#strings"
     },
     {
@@ -14,9 +23,6 @@
     },
     {
       "include": "#constants"
-    },
-    {
-      "include": "#keys"
     },
     {
       "include": "#list-markers"
@@ -30,14 +36,57 @@
       "patterns": [
         {
           "name": "comment.line.semicolon.diana",
-          "begin": ";",
-          "end": "$",
-          "patterns": [
-            {
-              "name": "punctuation.definition.comment.diana",
-              "match": ";"
+          "match": ";.*$"
+        }
+      ]
+    },
+    "computed-keys": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.computed-key.diana",
+          "match": "\\[([^\\]]+)\\]\\s*:",
+          "captures": {
+            "0": {
+              "name": "meta.key.computed.diana"
+            },
+            "1": {
+              "name": "entity.name.tag.computed-key.content.diana",
+              "patterns": [
+                { "include": "#strings" },
+                { "include": "#numbers" },
+                { "include": "#constants" }
+              ]
             }
-          ]
+          }
+        }
+      ]
+    },
+    "quoted-keys": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.quoted-key.diana",
+          "match": "\"([^\"]+)\"\\s*:",
+          "captures": {
+            "0": {
+              "name": "meta.key.quoted.diana"
+            },
+            "1": {
+              "name": "entity.name.tag.quoted-key.content.diana"
+            }
+          }
+        }
+      ]
+    },
+    "simple-keys": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.key-path.diana",
+          "match": "([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*)\\s*:",
+          "captures": {
+            "1": {
+              "name": "variable.other.property.diana"
+            }
+          }
         }
       ]
     },
@@ -47,16 +96,6 @@
           "name": "string.quoted.triple.diana",
           "begin": "\"\"\"",
           "end": "\"\"\"",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.diana"
-            }
-          },
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.diana"
-            }
-          },
           "patterns": [
             {
               "name": "constant.character.escape.diana",
@@ -68,21 +107,7 @@
           "name": "string.quoted.double.diana",
           "begin": "\"",
           "end": "\"",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.diana"
-            }
-          },
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.diana"
-            }
-          },
           "patterns": [
-            {
-              "name": "constant.character.escape.diana",
-              "match": "\\\\[\"\\\\nrtbfav]"
-            },
             {
               "name": "constant.character.escape.diana",
               "match": "\\\\."
@@ -95,19 +120,19 @@
       "patterns": [
         {
           "name": "constant.numeric.scientific.diana",
-          "match": "\\b-?[0-9]+\\.?[0-9]*[eE][+-]?[0-9]+\\b"
+          "match": "-?[0-9]+\\.?[0-9]*[eE][+-]?[0-9]+"
         },
         {
           "name": "constant.numeric.hex.diana",
-          "match": "\\b0[xX][0-9a-fA-F]+\\b"
+          "match": "0[xX][0-9a-fA-F]+"
         },
         {
           "name": "constant.numeric.float.diana",
-          "match": "\\b-?[0-9]+\\.[0-9]+\\b"
+          "match": "-?[0-9]+\\.[0-9]+"
         },
         {
           "name": "constant.numeric.integer.diana",
-          "match": "\\b-?[0-9]+\\b"
+          "match": "-?[0-9]+"
         }
       ]
     },
@@ -120,44 +145,6 @@
         {
           "name": "constant.language.null.diana",
           "match": "\\bnull\\b"
-        }
-      ]
-    },
-    "keys": {
-      "patterns": [
-        {
-          "name": "entity.name.tag.computed-key.diana",
-          "begin": "\\[",
-          "end": "\\]",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.computed-key.begin.diana"
-            }
-          },
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.computed-key.end.diana"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#strings"
-            },
-            {
-              "include": "#numbers"
-            },
-            {
-              "include": "#constants"
-            }
-          ]
-        },
-        {
-          "name": "entity.name.tag.quoted-key.diana",
-          "match": "\"[^\"]*\"(?=\\s*:)"
-        },
-        {
-          "name": "entity.name.tag.key-path.diana",
-          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*(?=\\s*:)"
         }
       ]
     },
@@ -194,14 +181,6 @@
         {
           "name": "punctuation.definition.array.end.diana",
           "match": "\\]"
-        },
-        {
-          "name": "punctuation.definition.group.begin.diana",
-          "match": "\\("
-        },
-        {
-          "name": "punctuation.definition.group.end.diana",
-          "match": "\\)"
         }
       ]
     }

@@ -1,0 +1,16 @@
+; Simple test for key vs string highlighting
+
+; Simple key
+name: "value"
+
+; Quoted key  
+"quoted key": "quoted value"
+
+; Computed key
+[123]: "computed value"
+
+; Dot notation key
+nested.path: "nested value"
+
+; Just a string (not a key)
+some_other_text: "this is just a string value" 
