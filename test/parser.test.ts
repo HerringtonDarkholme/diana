@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parse, ASTNode, ProgramNode } from '../src/parser';
+import { parse, ProgramNode } from '../src/parser';
 import { tokenize } from '../src/tokenizer';
 
 describe('parser', () => {

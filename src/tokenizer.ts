@@ -41,11 +41,11 @@ function isDigit(ch: string) {
 }
 
 function isIdentifierStart(ch: string) {
-  return /[A-Za-z_[\].\-\d"]/i.test(ch);
+  return /[A-Za-z_[].-\d"]/i.test(ch);
 }
 
 function isIdentifierChar(ch: string) {
-  return /[A-Za-z0-9_.\-[\]"]/i.test(ch);
+  return /[A-Za-z0-9_.[\]"]/i.test(ch);
 }
 
 export function tokenize(input: string): Token[] {
@@ -88,7 +88,6 @@ export function tokenize(input: string): Token[] {
   }
 
   function handleIndentation() {
-    let start = pos;
     let spaces = 0;
     while (peek() === ' ') {
       advance();
@@ -110,7 +109,6 @@ export function tokenize(input: string): Token[] {
     let ch = peek();
     // Handle comments
     if (ch === ';') {
-      let startCol = col;
       let comment = '';
       while (peek() && peek() !== '\n') {
         comment += peek();
@@ -137,24 +135,18 @@ export function tokenize(input: string): Token[] {
     if (ch === '{') { addToken('LBRACE'); advance(); continue; }
     if (ch === '}') { addToken('RBRACE'); advance(); continue; }
     if (ch === '[') {
-      // Look ahead to see if this is a bracketed key (e.g., [123]:)
-      let start = pos;
       advance(); // skip [
       let innerStart = pos;
       readWhile(c => c !== ']');
-      let inner = input.slice(innerStart, pos);
       advance(); // skip ]
-      let after = pos;
       skipWhitespace();
       if (peek() === ':') {
-        // Bracketed key
-        let id = input.slice(start, pos); // includes [ and ]
+        let id = input.slice(innerStart - 1, pos); // includes [ and ]
         addToken('IDENTIFIER', id);
         continue;
       } else {
-        // Not a key, treat as LBRACKET, ...
-        pos = start; // rewind
-        col -= (pos - start);
+        pos = innerStart - 1; // rewind
+        col -= (pos - (innerStart - 1));
         addToken('LBRACKET'); advance();
         skipWhitespace();
         while (pos < input.length && peek() !== ']') {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { tokenize, Token } from '../src/tokenizer';
+import { tokenize } from '../src/tokenizer';
 
 describe('tokenizer', () => {
   it('should tokenize a simple key-value pair', () => {
