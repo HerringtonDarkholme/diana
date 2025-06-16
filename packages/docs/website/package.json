@@ -1,8 +1,0 @@
-{
-  "scripts": {
-    "dev": "vitepress dev website",
-    "build": "vitepress build website",
-    "serve": "vitepress serve website",
-    "vercel-build": "vitepress build website"
-  }
-} 

@@ -82,4 +82,4 @@ When contributing to Diana documentation:
 
 ---
 
-For more information about the Diana project, see the main [README](../README.md).
+For more information about the Diana project, see the main [GitHub Repo](https://github.com/HerringtonDarkholme/diana).
