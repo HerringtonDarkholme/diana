@@ -1,0 +1,23 @@
+{
+  "name": "vitepress-project",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev website",
+    "build": "vitepress build website",
+    "serve": "vitepress serve website"
+  },
+  "devDependencies": {
+    "vitepress": "1.6.3"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search"
+      ]
+    }
+  },
+  "dependencies": {
+    "shiki": "^3.6.0"
+  }
+}

@@ -25,7 +25,7 @@ debug: true
 server:
   host: "localhost"
   port: 8080
-  
+
 database:
   host: "localhost"
   port: 5432
@@ -73,4 +73,4 @@ When contributing to Diana documentation:
 
 ---
 
-For more information about the Diana project, see the main [README](../README.md). 
+For more information about the Diana project, see the main [README](../README.md).

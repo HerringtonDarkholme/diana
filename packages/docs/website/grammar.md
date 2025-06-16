@@ -592,7 +592,7 @@ users:
 application:
   name: "Web Service"
   version: "2.1.0"
-  
+
   environments:
     development:
       database:
@@ -601,7 +601,7 @@ application:
       api:
         base_url: "http://localhost:3000"
         timeout: 5000
-    
+
     production:
       database:
         host: "prod-db.example.com"
@@ -609,7 +609,7 @@ application:
       api:
         base_url: "https://api.example.com"
         timeout: 10000
-  
+
   features:
     * "authentication"
     * "logging"
@@ -662,12 +662,12 @@ server:
   listen:
     address: "0.0.0.0"
     port: 80
-  
+
   ssl:
     enabled: true
     certificate: "/path/to/cert.pem"
     private_key: "/path/to/key.pem"
-  
+
   routes:
     * { path: "/api/*", handler: "api_handler" }
     * { path: "/static/*", handler: "static_handler" }
@@ -679,7 +679,7 @@ logging:
   outputs:
     * { type: "console", format: "text" }
     * { type: "file", path: "/var/log/app.log", format: "json" }
-  
+
   loggers:
     "app.database": "debug"
     "app.auth": "warn"
@@ -780,4 +780,4 @@ list: [1, 2, 3  ; Should be: list: [1, 2, 3]
 ; Error: Invalid indentation
 parent:
 child: "value"  ; Should be indented under parent
-``` 
+```
