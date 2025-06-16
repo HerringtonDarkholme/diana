@@ -1,7 +1,7 @@
-; id: "no-await-in-loop"
-; message: "Don't use await inside of loops"
-; severity: "warning"
-; language: "TypeScript"
+id: "no-await-in-loop"
+message: "Don't use await inside of loops"
+severity: "warning"
+language: "TypeScript"
 rule.all:
   * inside.any:
       * kind: "for_in_statement"
