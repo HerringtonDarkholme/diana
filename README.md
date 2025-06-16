@@ -1,6 +1,15 @@
 # Diana
 
+![Diana Logo](./packages/docs/website/public/dna.png)
+
 Diana is a configuration language designed for clarity and tooling support. This monorepo contains the core language implementation and related tools, including a VS Code extension.
+
+## How Diana Compares
+
+Diana is:
+- **YAML with lexical type**: Like YAML, but with explicit, reliable type handling.
+- **TOML with nesting structure**: Supports TOML-style nested objects and sections.
+- **JSON with concise grammar**: Offers JSON's data model with a more concise, human-friendly syntax.
 
 ## Monorepo Structure
 

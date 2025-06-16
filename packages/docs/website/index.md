@@ -1,6 +1,15 @@
 # Diana Configuration Language Documentation
 
+![Diana Logo](/dna.png)
+
 Welcome to the Diana configuration language documentation! This folder contains comprehensive guides and references for using Diana in Simple Mode.
+
+## How Diana Compares
+
+Diana is:
+- **YAML with lexical type**: Like YAML, but with explicit, reliable type handling.
+- **TOML with nesting structure**: Supports TOML-style nested objects and sections.
+- **JSON with concise grammar**: Offers JSON's data model with a more concise, human-friendly syntax.
 
 ## 📚 Documentation Files
 
