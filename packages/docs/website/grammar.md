@@ -674,16 +674,14 @@ server:
     * { path: "/*", handler: "default_handler" }
 
 ; Logging configuration
-logging:
-  level: "info"
-  outputs:
-    * { type: "console", format: "text" }
-    * { type: "file", path: "/var/log/app.log", format: "json" }
-
-  loggers:
-    "app.database": "debug"
-    "app.auth": "warn"
-    "app.api": "info"
+logging.level: "info"
+logging.outputs:
+  * { type: "console", format: "text" }
+  * { type: "file", path: "/var/log/app.log", format: "json" }
+logging.loggers:
+  "app.database": "debug"
+  "app.auth": "warn"
+  "app.api": "info"
 ```
 
 **JSON Output:**
