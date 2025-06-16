@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "docs": {
+      "outputDirectory": "packages/docs/website/.vitepress/dist"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/packages/docs/website/.vitepress/dist/$1" }
+  ]
+} 
