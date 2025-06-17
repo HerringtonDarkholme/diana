@@ -13,6 +13,7 @@ export type ASTNode =
   | NullNode
   | IdentifierNode
   | CommentNode
+  | LetBindingNode
 
 export type KeyNode = 
   | { type: 'KeyPath', path: string[] } // keypath: single or nested.level.key
@@ -69,6 +70,14 @@ export interface CommentNode {
   value: string
 }
 
+export interface LetBindingNode {
+  type: 'LetBinding'
+  name: string
+  value: ASTNode
+  annotation?: ASTNode // type annotation, optional
+  params?: string[] // for function definitions, optional
+}
+
 export function parse(tokens: Token[]): ASTNode {
   let pos = 0
 
@@ -98,6 +107,9 @@ export function parse(tokens: Token[]): ASTNode {
     while (peek() && peek().type !== 'EOF') {
       if (peek().type === 'COMMENT') {
         children.push(parseComment())
+        skipNewlines()
+      } else if (peek().type === 'LET') {
+        children.push(parseLetBinding())
         skipNewlines()
       } else if (peek().type === 'IDENTIFIER') {
         children.push(parseKeyValue())
@@ -274,6 +286,63 @@ export function parse(tokens: Token[]): ASTNode {
       // Simple value
       return parseValue()
     }
+  }
+
+  function parseLetBinding(): LetBindingNode {
+    expect('LET')
+    skipNewlines()
+    // Parse name
+    const nameToken = expect('IDENTIFIER')
+    const name = nameToken.value || ''
+    skipNewlines()
+    let annotation: ASTNode | undefined = undefined
+    let params: string[] | undefined = undefined
+    // Optional type annotation or function params
+    if (peek().type === 'COLON') {
+      next() // consume ':'
+      skipNewlines()
+      // Parse type annotation (as identifier or type expression)
+      const typeToken = next()
+      annotation = { type: 'Identifier', name: typeToken.value || '' }
+      skipNewlines()
+    } else if (peek().type === 'LBRACKET' || (peek().type === 'IDENTIFIER' && peek().value === '(')) {
+      // Function params (not fully implemented, just collect names for now)
+      next()
+      while (peek().type !== 'RBRACKET' && !(peek().type === 'IDENTIFIER' && peek().value === ')') && peek().type !== 'EOF') {
+        if (peek().type === 'IDENTIFIER' && peek().value !== ')') {
+          if (!params) params = []
+          params.push(peek().value || '')
+        }
+        next()
+      }
+      if (peek().type === 'RBRACKET' || (peek().type === 'IDENTIFIER' && peek().value === ')')) next()
+      skipNewlines()
+    }
+    // Expect '='
+    if (peek().type === 'IDENTIFIER' && peek().value === '=') {
+      next()
+    } else if (peek().type === 'COLON') {
+      // fallback, allow 'let x: type = ...'
+      next()
+    } else {
+      expect('IDENTIFIER', '=') // fallback, will error
+    }
+    skipNewlines()
+    // Parse value
+    let value: ASTNode
+    const nextToken = peek()
+    if (nextToken && (nextToken.type === 'STRING' || nextToken.type === 'NUMBER' || nextToken.type === 'BOOLEAN' || nextToken.type === 'NULL' || nextToken.type === 'LBRACE' || nextToken.type === 'LBRACKET' || nextToken.type === 'INDENT' || (nextToken.type === 'IDENTIFIER' && nextToken.value && /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(nextToken.value)))) {
+      value = parseValue()
+    } else {
+      // Collect all tokens until NEWLINE or EOF as a string expression
+      let expr = ''
+      while (peek() && peek().type !== 'NEWLINE' && peek().type !== 'EOF') {
+        expr += (expr ? ' ' : '') + (peek().value || '')
+        next()
+      }
+      value = { type: 'String', value: expr }
+    }
+    return { type: 'LetBinding', name, value, annotation, params }
   }
 
   return parseProgram()

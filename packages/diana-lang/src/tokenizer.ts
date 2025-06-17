@@ -3,6 +3,7 @@
 export type TokenType =
   | 'COMMENT'
   | 'IDENTIFIER'
+  | 'LET'
   | 'NUMBER'
   | 'STRING'
   | 'BOOLEAN'
@@ -385,6 +386,10 @@ export function tokenize(input: string): Token[] {
       continue
     }
     if (ch === '*') { addToken('ASTERISK', undefined, startLine, startCol); advance(); continue; }
+    // Handle single-char operators as identifiers for parser compatibility
+    if (ch === '=' || ch === '(' || ch === ')') {
+      addToken('IDENTIFIER', ch, startLine, startCol); advance(); continue;
+    }
     // Handle quoted keys or strings
     if (ch === '"' || ch === "'") {
       const { value, type, newPos, newLine, newCol, error } = readQuotedKeyOrString(input, pos, line, col)
@@ -414,7 +419,9 @@ export function tokenize(input: string): Token[] {
     // Handle identifier, boolean, null (case-sensitive)
     if (isIdentifierStart(ch)) {
       let id = readWhile(isIdentifierChar)
-      if (id === 'true' || id === 'false') {
+      if (id === 'let') {
+        addToken('LET', id, startLine, startCol)
+      } else if (id === 'true' || id === 'false') {
         addToken('BOOLEAN', id, startLine, startCol)
       } else if (id === 'null') {
         addToken('NULL', id, startLine, startCol)

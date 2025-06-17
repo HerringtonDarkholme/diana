@@ -77,6 +77,14 @@ d: -1_234.5_678e-9_876`;
     expect(tokens.find(t => t.value === '6.02e+23000')).toBeDefined();
     expect(tokens.find(t => t.value === '-1234.5678e-9876')).toBeDefined();
   });
+
+  it('should tokenize let as LET keyword', () => {
+    const input = 'let x = 1';
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'LET')).toBe(true);
+    // Should not be an IDENTIFIER for 'let'
+    expect(tokens.find(t => t.value === 'let')?.type).toBe('LET');
+  });
 });
 
 describe('tokenizer (edge cases and errors)', () => {

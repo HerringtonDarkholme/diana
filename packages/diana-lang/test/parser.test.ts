@@ -248,6 +248,71 @@ describe('parser', () => {
       throw new Error('Expected List for value');
     }
   });
+
+  it('should parse let variable binding', () => {
+    const input = 'let x = 1';
+    const ast = parse(tokenize(input)) as ProgramNode;
+    expect(ast.type).toBe('Program');
+    expect(ast.children.length).toBe(1);
+    const letNode = ast.children[0];
+    expect(letNode.type).toBe('LetBinding');
+    if (letNode.type === 'LetBinding') {
+      expect(letNode.name).toBe('x');
+      expect(letNode.value.type).toBe('Number');
+      if (letNode.value.type === 'Number') {
+        expect(letNode.value.value).toBe(1);
+      }
+    }
+  });
+
+  it('should parse let variable binding with type annotation', () => {
+    const input = 'let y: int = 2';
+    const ast = parse(tokenize(input)) as ProgramNode;
+    const letNode = ast.children[0];
+    expect(letNode.type).toBe('LetBinding');
+    if (letNode.type === 'LetBinding') {
+      expect(letNode.name).toBe('y');
+      expect(letNode.annotation).toBeDefined();
+      if (letNode.annotation && letNode.annotation.type === 'Identifier') {
+        expect(letNode.annotation.name).toBe('int');
+      }
+      expect(letNode.value.type).toBe('Number');
+      if (letNode.value.type === 'Number') {
+        expect(letNode.value.value).toBe(2);
+      }
+    }
+  });
+
+  it('should parse let function binding', () => {
+    const input = 'let add(a, b) = a';
+    const ast = parse(tokenize(input)) as ProgramNode;
+    const letNode = ast.children[0];
+    expect(letNode.type).toBe('LetBinding');
+    if (letNode.type === 'LetBinding') {
+      expect(letNode.name).toBe('add');
+      expect(letNode.params).toEqual(['a', 'b']);
+      // The value will be parsed as an Identifier or expression, just check type for now
+      expect(letNode.value).toBeDefined();
+    }
+  });
+
+  it('should parse let with annotation and value', () => {
+    const input = 'let annotated: int = 123';
+    const ast = parse(tokenize(input)) as ProgramNode;
+    const letNode = ast.children[0];
+    expect(letNode.type).toBe('LetBinding');
+    if (letNode.type === 'LetBinding') {
+      expect(letNode.name).toBe('annotated');
+      expect(letNode.annotation).toBeDefined();
+      if (letNode.annotation && letNode.annotation.type === 'Identifier') {
+        expect(letNode.annotation.name).toBe('int');
+      }
+      expect(letNode.value.type).toBe('Number');
+      if (letNode.value.type === 'Number') {
+        expect(letNode.value.value).toBe(123);
+      }
+    }
+  });
 });
 
 describe('KeyValueNode key types', () => {
