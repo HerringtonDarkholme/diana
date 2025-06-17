@@ -65,4 +65,58 @@ describe('tokenizer', () => {
     expect(tokens.some(t => t.type === 'BOOLEAN')).toBe(true);
     expect(tokens.some(t => t.type === 'NULL')).toBe(true);
   });
+});
+
+describe('tokenizer (edge cases and errors)', () => {
+  it('should emit ERROR for unclosed block comment', () => {
+    const input = ';;; unclosed block comment';
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unclosed block comment'))).toBe(true);
+  });
+
+  it('should emit ERROR for unclosed string', () => {
+    const input = 'key: "unclosed string';
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unclosed string'))).toBe(true);
+  });
+
+  it('should emit ERROR for unsupported number format', () => {
+    const input = 'num: 1_000';
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unsupported number format'))).toBe(true);
+  });
+
+  it('should emit ERROR for unknown character', () => {
+    const input = 'key: 123 $';
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unknown character'))).toBe(true);
+  });
+
+  it('should handle .5 and -.5 as numbers', () => {
+    const input = `a: .5\nb: -.5`;
+    const tokens = tokenize(input);
+    expect(tokens.filter(t => t.type === 'NUMBER').map(t => t.value)).toEqual(['.5', '-.5']);
+  });
+
+  it('should handle triple-quoted keys and strings', () => {
+    const input = `"""triple key""": 1\ntriple: """multi\nline\nstring"""`;
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.value === '"""triple key"""')).toBe(true);
+    expect(tokens.some(t => t.type === 'STRING' && t.value?.includes('multi'))).toBe(true);
+  });
+
+  it('should handle bracketed keys with and without colon', () => {
+    const input = `[abc]: 1\n[def] 2`;
+    const tokens = tokenize(input);
+    expect(tokens.some(t => t.type === 'IDENTIFIER' && t.value === '[abc]')).toBe(true);
+    expect(tokens.filter(t => t.type === 'LBRACKET').length).toBeGreaterThan(0);
+  });
+
+  it('should record correct line and column for tokens', () => {
+    const input = `a: 1\n  b: 2`;
+    const tokens = tokenize(input);
+    const bToken = tokens.find(t => t.value === 'b');
+    expect(bToken?.line).toBe(2);
+    expect(bToken?.column).toBe(3);
+  });
 }); 

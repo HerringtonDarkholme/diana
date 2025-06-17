@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Register hover provider for Diana files
   const hoverProvider = vscode.languages.registerHoverProvider('diana', {
-    provideHover(document, position, token) {
+    provideHover(document, position, _token) {
       const range = document.getWordRangeAtPosition(position);
       const word = document.getText(range);
       
@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Register document symbol provider for Diana files
   const documentSymbolProvider = vscode.languages.registerDocumentSymbolProvider('diana', {
-    provideDocumentSymbols(document, token) {
+    provideDocumentSymbols(document, _token) {
       const symbols: vscode.DocumentSymbol[] = [];
       const text = document.getText();
       const lines = text.split('\n');
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Register completion provider for Diana files
   const completionProvider = vscode.languages.registerCompletionItemProvider('diana', {
-    provideCompletionItems(document, position, token, context) {
+    provideCompletionItems(_document, _position, _token, _context) {
       const completions: vscode.CompletionItem[] = [];
 
       // Basic value completions
