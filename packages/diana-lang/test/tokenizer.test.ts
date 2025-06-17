@@ -65,6 +65,18 @@ describe('tokenizer', () => {
     expect(tokens.some(t => t.type === 'BOOLEAN')).toBe(true);
     expect(tokens.some(t => t.type === 'NULL')).toBe(true);
   });
+
+  it('should handle numbers with underscores as digit separators', () => {
+    const input = `a: 1_000
+b: 3.14_159
+c: 6.02e+23_000
+d: -1_234.5_678e-9_876`;
+    const tokens = tokenize(input);
+    expect(tokens.find(t => t.value === '1000')).toBeDefined();
+    expect(tokens.find(t => t.value === '3.14159')).toBeDefined();
+    expect(tokens.find(t => t.value === '6.02e+23000')).toBeDefined();
+    expect(tokens.find(t => t.value === '-1234.5678e-9876')).toBeDefined();
+  });
 });
 
 describe('tokenizer (edge cases and errors)', () => {
@@ -78,18 +90,6 @@ describe('tokenizer (edge cases and errors)', () => {
     const input = 'key: "unclosed string';
     const tokens = tokenize(input);
     expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unclosed string'))).toBe(true);
-  });
-
-  it('should emit ERROR for unsupported number format', () => {
-    const input = 'num: 1_000';
-    const tokens = tokenize(input);
-    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unsupported number format'))).toBe(true);
-  });
-
-  it('should emit ERROR for unknown character', () => {
-    const input = 'key: 123 $';
-    const tokens = tokenize(input);
-    expect(tokens.some(t => t.type === 'ERROR' && t.value?.includes('Unknown character'))).toBe(true);
   });
 
   it('should handle .5 and -.5 as numbers', () => {

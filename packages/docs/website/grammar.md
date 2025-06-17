@@ -56,36 +56,44 @@ parent:
 ## 3. Data Types
 
 ### Integer
-Whole numbers, including negative values:
+Whole numbers, including negative values. Underscores are allowed as digit separators:
 
 ```diana
 positive: 123
 negative: -456
 zero: 0
+million: 1_000_000
 ```
+
+**Note:** You can use underscores to make large numbers more readable, e.g. `1_000_000` is parsed as `1000000`.
 
 **JSON Output:**
 ```json
 {
   "positive": 123,
   "negative": -456,
-  "zero": 0
+  "zero": 0,
+  "million": 1000000
 }
 ```
 
 ### Float
-Decimal numbers:
+Decimal numbers. Underscores are allowed as digit separators:
 
 ```diana
 pi: 3.14159
 negative_float: -2.5
+fraction: 0.123_456
 ```
+
+**Note:** You can use underscores to make decimals more readable, e.g. `3.14_159` is parsed as `3.14159`.
 
 **JSON Output:**
 ```json
 {
   "pi": 3.14159,
-  "negative_float": -2.5
+  "negative_float": -2.5,
+  "fraction": 0.123456
 }
 ```
 

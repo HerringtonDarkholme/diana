@@ -90,11 +90,10 @@ function readQuotedString(input: string, pos: number, line: number, col: number,
 }
 
 function readNumber(input: string, pos: number, line: number, col: number) {
-  // Handles int, float, scientific, .5, -.5, etc.
+  // Handles int, float, scientific, .5, -.5, etc. Allows underscores as digit separators.
   // Returns {num, newPos, newLine, newCol, error}
   let num = ''
   let ch = input[pos]
-  let hasUnderscore = false;
   if (ch === '-') {
     num += '-'
     pos++
@@ -108,7 +107,6 @@ function readNumber(input: string, pos: number, line: number, col: number) {
   }
   // Integer part
   while (isDigit(input[pos]) || input[pos] === '_') {
-    if (input[pos] === '_') hasUnderscore = true;
     num += input[pos]
     pos++
     col++
@@ -119,7 +117,6 @@ function readNumber(input: string, pos: number, line: number, col: number) {
     pos++
     col++
     while (isDigit(input[pos]) || input[pos] === '_') {
-      if (input[pos] === '_') hasUnderscore = true;
       num += input[pos]
       pos++
       col++
@@ -136,14 +133,14 @@ function readNumber(input: string, pos: number, line: number, col: number) {
       col++
     }
     while (isDigit(input[pos]) || input[pos] === '_') {
-      if (input[pos] === '_') hasUnderscore = true;
       num += input[pos]
       pos++
       col++
     }
   }
-  let error = hasUnderscore ? `Unsupported number format: ${num}` : null
-  return { num, newPos: pos, newLine: line, newCol: col, error }
+  // Remove underscores for the token value
+  let cleanNum = num.replace(/_/g, '');
+  return { num: cleanNum, newPos: pos, newLine: line, newCol: col, error: null }
 }
 
 function readComment(input: string, pos: number, line: number, col: number) {
